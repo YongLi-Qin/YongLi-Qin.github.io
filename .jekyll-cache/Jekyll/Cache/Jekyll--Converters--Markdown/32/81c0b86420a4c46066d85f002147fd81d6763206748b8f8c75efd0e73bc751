@@ -1,3 +1,0 @@
-I"„<h2 id="docker">Docker</h2>
-<p><code class="highlighter-rouge">docker create {image}</code> Create a container based on {image}</p>
-:ET

@@ -1,733 +1,181 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-04-25T13:35:23+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>QYF</name></author><entry><title type="html">🗂 【Exploration】Concatenate Strings In Golang</title><link href="http://localhost:4000/2025/04/01/concatenate-str-in-Golang.html" rel="alternate" type="text/html" title="🗂 【Exploration】Concatenate Strings In Golang" /><published>2025-04-01T00:00:00+11:00</published><updated>2025-04-01T21:20:55+11:00</updated><id>http://localhost:4000/2025/04/01/concatenate-str-in-Golang</id><content type="html" xml:base="http://localhost:4000/2025/04/01/concatenate-str-in-Golang.html">&lt;p&gt;When I was tackling &lt;a href=&quot;https://leetcode.com/problems/group-anagrams/description/&quot;&gt;this&lt;/a&gt; leetcode question by Golang, I found there are actually way many ways to concatenate string in Golang. That’s why I want to write this post to demonstrate some of them and how I compare them to figure out which one is faster or more efficient.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-04-25T15:37:46+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>Matt Qin</name></author><entry><title type="html">About useEffect</title><link href="http://localhost:4000/2025/04/25/userEffect.html" rel="alternate" type="text/html" title="About useEffect" /><published>2025-04-25T00:00:00+10:00</published><updated>2025-04-25T15:37:46+10:00</updated><id>http://localhost:4000/2025/04/25/userEffect</id><content type="html" xml:base="http://localhost:4000/2025/04/25/userEffect.html">&lt;h1 id=&quot;-why-do-we-need-useeffect-in-react&quot;&gt;📝 Why Do We Need useEffect in React?&lt;/h1&gt;
 
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;concatenatestr&lt;/span&gt;
+&lt;p&gt;Understand What It Is, Why It Matters, and How It Works&lt;/p&gt;
 
-&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;bytes&quot;&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;fmt&quot;&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;strings&quot;&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;testing&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;hr /&gt;
 
-&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;The quick brown fox jumps over the lazy dog.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Lorem ipsum dolor sit amet, consectetur adipiscing elit.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Go is an amazing programming language for concurrency.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;This benchmark will test different string concatenation methods.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Optimizing memory allocation can improve performance.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Strings in Go are immutable, making efficient concatenation tricky.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;The builder pattern helps in reducing memory allocations.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Testing with real-world data provides better insights.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Performance benchmarks should be reproducible and fair.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Using a buffer reduces the overhead of repeated allocations.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Code readability is just as important as performance.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Profiling helps in identfying bottlenecks in code.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Choosing the right algorithm is crucial for efficiency.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;A well-structured program is easier to maintain.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Concurrency in Go is powered by goroutines and channels.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Using `b.ReportAllocs()` helps measure memory usage in benchmarks.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Refactoring code can lead to better performance and clarity.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Immutable data structures have their pros and cons.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Memory leaks can be avoided with proper resource management.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&quot;Effective debugging saves a lot of development time.&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;h2 id=&quot;-introduction&quot;&gt;✅ Introduction&lt;/h2&gt;
 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkPlusOperator&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReportAllocs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;p&gt;React’s function components are clean and powerful, but they come with a twist — no lifecycle methods like &lt;code class=&quot;highlighter-rouge&quot;&gt;componentDidMount&lt;/code&gt;. So how do we fetch data, set up timers, or listen to events?&lt;/p&gt;
 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkSprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sprintf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;%s%s&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReportAllocs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;p&gt;That’s where &lt;code class=&quot;highlighter-rouge&quot;&gt;useEffect&lt;/code&gt; comes in.&lt;/p&gt;
 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkStringsJoin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([]&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]},&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReportAllocs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;hr /&gt;
 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkStringsBuilder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Builder&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;sb&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReportAllocs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;h2 id=&quot;-what-is-useeffect&quot;&gt;🔍 What is useEffect?&lt;/h2&gt;
 
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BenchmarkBytesWriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;testing&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;B&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Loop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Buffer&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WriteString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ReportAllocs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;useEffect&lt;/code&gt; is a React Hook that lets you perform &lt;strong&gt;side effects&lt;/strong&gt; in function components.&lt;/p&gt;
 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;In summary of the above code, I’m comparing 5 different ways to combine strings:&lt;/p&gt;
+&lt;h3 id=&quot;-common-side-effects-include&quot;&gt;💻 Common side effects include:&lt;/h3&gt;
 
-&lt;ol&gt;
-  &lt;li&gt;Simple plus operator.&lt;/li&gt;
-  &lt;li&gt;Using &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Sprintf()&lt;/code&gt;, which is used to format a string with placeholders and values.&lt;/li&gt;
-  &lt;li&gt;String join, joining a slice of strings to concatenate multiple strings.&lt;/li&gt;
-  &lt;li&gt;Using &lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Builder&lt;/code&gt;, introduced in Go 1.10, which is used to manipulate UTF-8 encoded strings.&lt;/li&gt;
-  &lt;li&gt;Using &lt;code class=&quot;highlighter-rouge&quot;&gt;bytes.Buffer&lt;/code&gt;, which maintains a list of bytes and has the &lt;code class=&quot;highlighter-rouge&quot;&gt;WriteString&lt;/code&gt; function to add strings to the byte slice.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;goos: darwin
-goarch: arm64
-pkg: concatenate-str
-cpu: Apple M4 Pro
-BenchmarkPlusOperator-2          1071540              1104 ns/op           12272 B/op         19 allocs/op
-BenchmarkSprintf-2                633754              1908 ns/op           12946 B/op         59 allocs/op
-BenchmarkStringsJoin-2            911908              1257 ns/op           12320 B/op         20 allocs/op
-BenchmarkStringsBuilder-2        4109606               295.8 ns/op          2752 B/op          6 allocs/op
-BenchmarkBytesWriteString-2      2287969               524.8 ns/op          5184 B/op          7 allocs/op
-PASS
-ok      concatenate-str 6.789s
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;As you can see, using some packages from Golang like &lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Builder&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;bytes.Buffer&lt;/code&gt; is much faster than other approaches. The fastest one is &lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Builder&lt;/code&gt;, which is almost 4 times faster than the plus operator and &lt;code class=&quot;highlighter-rouge&quot;&gt;strings.Join&lt;/code&gt;, and 6 times faster than &lt;code class=&quot;highlighter-rouge&quot;&gt;fmt.Sprintf()&lt;/code&gt;. Now I know what my go-to choice is when trying to concatenate strings.&lt;/p&gt;</content><author><name>QYF</name></author><summary type="html">When I was tackling this leetcode question by Golang, I found there are actually way many ways to concatenate string in Golang. That’s why I want to write this post to demonstrate some of them and how I compare them to figure out which one is faster or more efficient.</summary></entry><entry><title type="html">🗂 【Exploration】Golang Docker K8S</title><link href="http://localhost:4000/2023/04/02/Golang-Docker-K8S.html" rel="alternate" type="text/html" title="🗂 【Exploration】Golang Docker K8S" /><published>2023-04-02T00:00:00+11:00</published><updated>2023-04-02T18:01:33+10:00</updated><id>http://localhost:4000/2023/04/02/Golang-Docker-K8S</id><content type="html" xml:base="http://localhost:4000/2023/04/02/Golang-Docker-K8S.html">&lt;p&gt;Nowaday, using docker with kubernetes as the deployment tools is more and more popular. This exploration document here will mainly focuse on &lt;strong&gt;how&lt;/strong&gt; we use docker and kubernetes to deploy a simple service (fully local, yes even the cluster we going to use in kubernetes is in local as well 🥳)&lt;/p&gt;
-
-&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;h1 id=&quot;agenda&quot;&gt;Agenda&lt;/h1&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;#Develop a simply service&quot;&gt;Develop a simply service&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#Create image for this service&quot;&gt;Create image for this service&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#Using docker image to deploy the service&quot;&gt;Using docker image to deploy the service&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Fetching data from APIs&lt;/li&gt;
+  &lt;li&gt;Setting up subscriptions or timers&lt;/li&gt;
+  &lt;li&gt;Listening to window resize or scroll events&lt;/li&gt;
+  &lt;li&gt;Manually updating the DOM&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
 
-&lt;p&gt; &lt;/p&gt;
-&lt;h1 id=&quot;develop-a-simple-service&quot;&gt;Develop a simple service&lt;/h1&gt;
-&lt;h3 id=&quot;prerequires&quot;&gt;Prerequires&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir ping-service
-cd ping-service
-go mod init main
-touch main.go
+&lt;h2 id=&quot;️-basic-syntax&quot;&gt;🛠️ Basic Syntax&lt;/h2&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// your side effect logic here&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;implementation&quot;&gt;Implementation&lt;/h3&gt;
-&lt;p&gt;Ping service is a good example as a simple service. Requirement for ping service is it keeps sending get request to a url provided. If there is no error happens, then log the url. Otherwise, log the error it gets. Also we want to stop the pogram when it received unix signals like SIGTERM or SIGINT&lt;/p&gt;
 
-&lt;p&gt;&lt;ins&gt;golang code&lt;/ins&gt;:&lt;/p&gt;
-&lt;div class=&quot;language-go highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;hr /&gt;
 
-	&lt;span class=&quot;c&quot;&gt;// Get url from env&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Getenv&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;URL&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;h2 id=&quot;-example&quot;&gt;📈 Example:&lt;/h2&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;React&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;react&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 
-    &lt;span class=&quot;c&quot;&gt;// Use go channel to ping url&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pingUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ExampleComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
-    &lt;span class=&quot;c&quot;&gt;// Stop while &lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Signal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;Count changed:&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// runs when `count` changes&lt;/span&gt;
 
-	&lt;span class=&quot;n&quot;&gt;signal&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Notify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;syscall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SIGINT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;syscall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;SIGTERM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-	&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt;
-
-	&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Shut down&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c&quot;&gt;//  Function which to keep sending get request to url provided and with 10 seconds sleep before next request&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pingUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-			&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
-		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-		&lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onClick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;Add&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/button&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;
+&lt;/span&gt;    &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/div&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;
+&lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;test-to-run&quot;&gt;Test to run:&lt;/h3&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://www.google.com go run main.go
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Ping-Service.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
 &lt;hr /&gt;
 
-&lt;p&gt; &lt;/p&gt;
-&lt;h1 id=&quot;create-image-for-this-service&quot;&gt;Create image for this service&lt;/h1&gt;
-&lt;h3 id=&quot;prerequires-1&quot;&gt;Prerequires&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;touch dockerfile
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;implementation-1&quot;&gt;Implementation&lt;/h3&gt;
-&lt;p&gt;After we have a runable service, the next setp is to create image for this service.&lt;/p&gt;
-
-&lt;p&gt;&lt;ins&gt;dockfile&lt;/ins&gt;&lt;/p&gt;
-&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; golang:1.16-alpine # Specific a base image to use, all following command is running under this base image. Here we use golang image cause our project is written in golang&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app # Create a default directory, it it also the default destination for following command&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;COPY&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; . /app # Copy the whole project to the image, this could be &quot;COPY . ./&quot; as well, cause we already set up /app as the default destination&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;RUN &lt;/span&gt;go build &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; /ping-service &lt;span class=&quot;c&quot;&gt;# Compile the go program and the application binary name is &quot;ping-service&quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;CMD&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [ &quot;/ping-service&quot; ] # Run ping-service which we compiled in previous step&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;ins&gt;build the image&lt;/ins&gt;&lt;/p&gt;
-
-&lt;p&gt;Specific the image name and version in format of {image_name:image_version} after –tag (if only specific the image_name, then its tag will be latest as default). At the end, speficic the path of where dockerfile is.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-command&quot;&gt;docker build --tag ping-service .
-
-docker images | grep &quot;ping-service&quot;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Ping-service-build-image.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;ins&gt;test to run the image&lt;/ins&gt;&lt;/p&gt;
-
-&lt;p&gt;After we created the image, can eaisly test if the image is doing what we want to do by running the image locally&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-command&quot;&gt;docker run --env URL=http://www.google.com ping-service
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Ping-service-run-image.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt; &lt;/p&gt;
-&lt;h1 id=&quot;deploy-the-service-using-the-created-image-in-k8s&quot;&gt;Deploy the service using the created image in K8S&lt;/h1&gt;
-
-&lt;h3 id=&quot;prerequires-2&quot;&gt;Prerequires&lt;/h3&gt;
-&lt;p&gt;&lt;ins&gt;using “kind” to setup your cluster locally&lt;/ins&gt;&lt;/p&gt;
-
-&lt;p&gt;Follow the instruction &lt;a href=&quot;https://kind.sigs.k8s.io/docs/user/quick-start/&quot;&gt;here&lt;/a&gt; to setup cluster locally.&lt;/p&gt;
-
-&lt;p&gt;Once your cluster setup, confirm by &lt;code class=&quot;highlighter-rouge&quot;&gt;kubectl cluster-info&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Ping-service-kind-cluster.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;ins&gt;load image to cluster&lt;/ins&gt;&lt;/p&gt;
-
-&lt;p&gt;Cause we didn’t push our image to docker hub. To let the cluster able to pull the image we want while deploying the service, we need to load the image to the cluster first.&lt;/p&gt;
-&lt;div class=&quot;language-dockerfile highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# ping-service is the image you want to load into the cluster. Specific the name of cluster after --name&lt;/span&gt;
-kind load docker-image ping-service  --name kind
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;implementation-2&quot;&gt;Implementation&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;touch ping-service.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;ins&gt;configuration of the deployment&lt;/ins&gt;&lt;/p&gt;
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;apiVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;apps/v1&lt;/span&gt;
-
-&lt;span class=&quot;na&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Deployment&lt;/span&gt;
-
-&lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-  &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ping-service-deployment&lt;/span&gt;
-
-  &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-    &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ping-service&lt;/span&gt;
-
-&lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-  &lt;span class=&quot;na&quot;&gt;replicas&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-
-  &lt;span class=&quot;na&quot;&gt;selector&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-    &lt;span class=&quot;na&quot;&gt;matchLabels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-      &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ping-service&lt;/span&gt;
-
-  &lt;span class=&quot;na&quot;&gt;template&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-    &lt;span class=&quot;na&quot;&gt;metadata&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-      &lt;span class=&quot;na&quot;&gt;labels&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-        &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ping-service&lt;/span&gt;
-
-    &lt;span class=&quot;na&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-      &lt;span class=&quot;na&quot;&gt;containers&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;app&lt;/span&gt;
-
-        &lt;span class=&quot;na&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ping-service&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# specific the image &lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;imagePullPolicy&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;IfNotPresent&lt;/span&gt;
-
-        &lt;span class=&quot;na&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;URL&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# specific the env value needed&lt;/span&gt;
-            &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://www.google.com&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;ins&gt;apply deployment&lt;/ins&gt;&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;kubectl apply &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ./ping-service.yml
-
-kubectl get pods &lt;span class=&quot;c&quot;&gt;# check if the service is running as expected&lt;/span&gt;
-
-kubectl logs &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;pod-name&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# check the log&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Ping-serevice-final.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;After this, you get a existing ping-service running in your local which using K8S and based on the docker image you compiled. WoW&lt;/p&gt;
-
-&lt;hr /&gt;
-&lt;h3 id=&quot;referenece&quot;&gt;Referenece&lt;/h3&gt;
-&lt;p&gt;&lt;a href=&quot;https://docs.docker.com/language/golang/build-images/&quot;&gt;Build your Go image&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://kubernetes.io/docs/concepts/workloads/controllers/deployment/&quot;&gt;K8S deployments&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://kind.sigs.k8s.io/docs/user/quick-start/&quot;&gt;Use kind to setup a cluster locally&lt;/a&gt;&lt;/p&gt;</content><author><name>QYF</name></author><summary type="html">Nowaday, using docker with kubernetes as the deployment tools is more and more popular. This exploration document here will mainly focuse on how we use docker and kubernetes to deploy a simple service (fully local, yes even the cluster we going to use in kubernetes is in local as well 🥳)</summary></entry><entry><title type="html">🗂 【Daily】Question with answer - 2023</title><link href="http://localhost:4000/2023/03/04/Quick-Answer.html" rel="alternate" type="text/html" title="🗂 【Daily】Question with answer - 2023" /><published>2023-03-04T00:00:00+11:00</published><updated>2023-04-02T17:41:56+10:00</updated><id>http://localhost:4000/2023/03/04/Quick-Answer</id><content type="html" xml:base="http://localhost:4000/2023/03/04/Quick-Answer.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
-&lt;p&gt;This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year.&lt;/p&gt;
-
-&lt;h3 id=&quot;what-are-the-popular-ways-to-maintain-a-users-authentication-state-nowadays&quot;&gt;What are the popular ways to maintain a user’s authentication state nowadays?&lt;/h3&gt;
-
-&lt;p&gt;Http is stateless protocol, which means for every separate request, it must contain information to tell the server who you are. There are mainly two ways to do it, &lt;strong&gt;session token&lt;/strong&gt; and &lt;strong&gt;JWTs&lt;/strong&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/RequestAuth.png&quot; alt=&quot;Request Authentication&quot; /&gt;&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;how-does-sessionid-or-session-token-work&quot;&gt;How does sessionID or session token work?&lt;/h3&gt;
-
-&lt;p&gt;Every time when user sends first request to try to login to a serve, serve side will validate the data of username or password. Once success, server side will generate a sessionID and store it, then return a cookie with the sessionID. Then for the following request to this serve will always include that cookie.&lt;/p&gt;
-
-&lt;p&gt;For every request with cookie, Serve could identify which user is sending this request base on the sessionID of the cookie. Some cons for session based authentication is it would increase the storage cost in the serve side as more user login, cause serve need to store the mapping between user and sessionID in it.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;what-is-jwt&quot;&gt;What is JWT?&lt;/h3&gt;
-
-&lt;p&gt;JWT(Json Web Token) is a token sent by serve to client when login. It contains 3 sections, which are header, payload and signature (signature of the header and payload). In the payload, it normally contains information like user role, user id, issuer (the serve where the jwt token from). when client use this jwt token to request the serve, serve could know who is sending the request. Compare to sessionID, which need the serve to store the mapping of sessionID and user id, using jwt contains the user id and serve could directly get it.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h3 id=&quot;pros--cons-of-sessionid-and-jwt-for-authentication&quot;&gt;Pros &amp;amp; Cons of SessionID and JWT for Authentication&lt;/h3&gt;
-
-&lt;h4 id=&quot;sessionid&quot;&gt;SessionID&lt;/h4&gt;
-
-&lt;p&gt;Pros:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Can logout the user from serve side (Revoking user’s access immediately)&lt;/li&gt;
-  &lt;li&gt;Session data is not visitable (like user id, role)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Cons:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;It will introduce notable latency to the response time from the serve. For every request serve need to verify the sessionID and figure out the associate user id for it, either use cache or accessing db for it&lt;/li&gt;
-  &lt;li&gt;While the amount of login user increases, more and more sessionID generated and store to cache or db. It needs more cost to maintain session storage.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;jwt&quot;&gt;JWT&lt;/h4&gt;
-
-&lt;p&gt;Pros:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Reduce the latency since serve side could do the authentication and figure out who is sending this request quicker&lt;/li&gt;
-  &lt;li&gt;Provider more scalability for increasing users. JWT is only stored in client side. Serve doesn’t need to store the mapping of sessionID and userID&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Cons:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;By using JWT, serve could not make a user logout and revoke role or privileges easily. JWT token will keep in valid status before the expired time pass.&lt;/li&gt;
-  &lt;li&gt;Session data is visitable. JWT token is only base-64 url encoded content, could easily decode it and get the information on it.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h2 id=&quot;-three-types-of-the-dependency-array&quot;&gt;🔁 Three types of the dependency array&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=U6OcC0yq1CE&quot;&gt;JSON Web tokens vs sessions for authentication, should you use JWTs as session tokens?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://devops.com/session-tokens-vs-jwts-choosing-your-session-management-solution/&quot;&gt;Session Tokens Vs. JWTs: Choosing Your Session Management Solution&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://stytch.com/blog/jwts-vs-sessions-which-is-right-for-you/&quot;&gt;JWTs vs. sessions: which authentication approach is right for you?￼&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>QYF</name></author><summary type="html">Summary This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year.</summary></entry><entry><title type="html">🗂 【Daily】Question with answer - 2022</title><link href="http://localhost:4000/2022/09/23/Quick-Answer.html" rel="alternate" type="text/html" title="🗂 【Daily】Question with answer - 2022" /><published>2022-09-23T00:00:00+10:00</published><updated>2023-04-02T17:41:56+10:00</updated><id>http://localhost:4000/2022/09/23/Quick-Answer</id><content type="html" xml:base="http://localhost:4000/2022/09/23/Quick-Answer.html">&lt;h2 id=&quot;summary&quot;&gt;Summary&lt;/h2&gt;
-&lt;p&gt;This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year.&lt;/p&gt;
-&lt;h3 id=&quot;why-we-need-replication-master-slave-of-database&quot;&gt;Why we need replication (master-slave) of database?&lt;/h3&gt;
-&lt;ol&gt;
-  &lt;li&gt;Avoid single point failure&lt;/li&gt;
-  &lt;li&gt;Scalability&lt;/li&gt;
-  &lt;li&gt;Performance&lt;/li&gt;
-  &lt;li&gt;Data security when running backup&lt;/li&gt;
-  &lt;li&gt;Analytics&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/8.0/en/replication.html&quot;&gt;Mysql Replication&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hevodata.com/learn/mysql-master-slave-replication/#a2&quot;&gt;Master-Slave Replication&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;[] → run once (on mount)&lt;/li&gt;
+  &lt;li&gt;[count] → run when count changes&lt;/li&gt;
+  &lt;li&gt;no array → run on every render&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
 
-&lt;h3 id=&quot;how-replication-synchronize-data-from-master&quot;&gt;How replication synchronize data from master?&lt;/h3&gt;
-&lt;p&gt;Basically, all the events ran in master db, will re-run in replication db as well to achieve synchronization. Every time a event happened in master db, will be written to bin-log. Then the replication read the bin-log and run the events.&lt;/p&gt;
+&lt;h2 id=&quot;-what-happens-if-you-dont-use-useeffect-here-is-a-simple-example&quot;&gt;💥 What happens if you don’t use useEffect? Here is a simple example!&lt;/h2&gt;
 
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;-example-fetching-data-directly-inside-the-component-body&quot;&gt;❌ Example: fetching data directly inside the component body&lt;/h3&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;BadComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// ❌ This will run every render — bad!&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;https://api.example.com/data&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/div&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;-what-goes-wrong&quot;&gt;🚨 What goes wrong?&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/8.0/en/replication-formats.html&quot;&gt;How replication runs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;fetch()&lt;/code&gt; runs → &lt;code class=&quot;highlighter-rouge&quot;&gt;setData()&lt;/code&gt; updates state&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;State update → triggers re-render&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Re-render the whole component and it will run &lt;code class=&quot;highlighter-rouge&quot;&gt;fetch()&lt;/code&gt; again → another state update…&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;🔁 Infinite loop of requests → bad for performance and may crash the app-&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
 
-&lt;h3 id=&quot;replication-format&quot;&gt;Replication format?&lt;/h3&gt;
-&lt;p&gt;Bin-log have two different formats, could choose one of them or mix of them.&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Statement-based&lt;/li&gt;
-  &lt;li&gt;Row-based&lt;/li&gt;
-&lt;/ol&gt;
+&lt;h3 id=&quot;-understanding-useeffect-comparison-and-triggering&quot;&gt;🧪 Understanding useEffect Comparison and Triggering&lt;/h3&gt;
+
+&lt;h3 id=&quot;-how-dependency-comparison-works&quot;&gt;💼 How Dependency Comparison Works?&lt;/h3&gt;
+
+&lt;p&gt;React’s &lt;code class=&quot;highlighter-rouge&quot;&gt;useEffect&lt;/code&gt; hook uses &lt;strong&gt;shallow comparison&lt;/strong&gt; for its dependency array:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h3 id=&quot;-primitive-values-number-string-boolean&quot;&gt;🧐 Primitive Values (number, string, boolean)&lt;/h3&gt;
+&lt;div class=&quot;language-javascript highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;useEffect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// Runs when userId changes&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;userId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Compares with `===`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev.mysql.com/doc/refman/8.0/en/replication-sbr-rbr.html&quot;&gt;Compare Statement-based and Row-based&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Uses strict equality (===) comparison&lt;/li&gt;
+  &lt;li&gt;Effect runs only when the value actually changes&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
-&lt;h3 id=&quot;what-is-message-oriented-middleware&quot;&gt;What is message-oriented middleware?&lt;/h3&gt;
-&lt;p&gt;Message-oriented middleware is a kind of infrastructure which supports sending and receiving data (message) to and from distributed systems. Both sending and receiving data is asynchronous in MOM, which means the sender application could just focusing on sending message, and doesn’t need to put effect on how the message been received. Generally, a MOM consists of three main parts: &lt;strong&gt;producer&lt;/strong&gt;, &lt;strong&gt;message queue&lt;/strong&gt;, &lt;strong&gt;consumer&lt;/strong&gt;.&lt;/p&gt;
 
-&lt;p&gt;Advantage:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Lower coupling&lt;/li&gt;
-  &lt;li&gt;Scalability&lt;/li&gt;
-  &lt;li&gt;Asynchronous&lt;/li&gt;
-  &lt;li&gt;Flexibility&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Disadvantage:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;Topology&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/MessageOrientedMiddleware.png&quot; alt=&quot;Message-Oriented Middleware&quot; /&gt;&lt;/p&gt;
+&lt;h3 id=&quot;-when-useeffect-triggers&quot;&gt;🤔 When useEffect Triggers?&lt;/h3&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.oreilly.com/library/view/data-lake-for/9781787281349/01b64a9d-bb69-4df8-a6ed-cd15e2ff8e46.xhtml&quot;&gt;Kafka as message-oriented middleware&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blogs.msmvps.com/peterritchie/2011/07/14/message-oriented-architectures/&quot;&gt;Message-oriented Architectures&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.geeksforgeeks.org/what-is-message-oriented-middleware-mom/&quot;&gt;What is Message Oriented Middleware (MOM)?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</content><author><name>QYF</name></author><summary type="html">Summary This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year. Why we need replication (master-slave) of database? Avoid single point failure Scalability Performance Data security when running backup Analytics</summary></entry><entry><title type="html">📃 【Command】 Docker / K8S</title><link href="http://localhost:4000/2022/07/27/Command.html" rel="alternate" type="text/html" title="📃 【Command】 Docker / K8S" /><published>2022-07-27T00:00:00+10:00</published><updated>2023-03-05T14:24:49+11:00</updated><id>http://localhost:4000/2022/07/27/Command</id><content type="html" xml:base="http://localhost:4000/2022/07/27/Command.html">&lt;h2 id=&quot;docker&quot;&gt;Docker&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker create {image}&lt;/code&gt; Create a container based on {image}&lt;/p&gt;
+  &lt;li&gt;First Render (Mount)&lt;/li&gt;
+  &lt;li&gt;Always runs after initial render&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker run {image}&lt;/code&gt; Create + Start a container&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker start {container}&lt;/code&gt; Start the container&lt;/p&gt;
+&lt;h4 id=&quot;-subsequent-renders&quot;&gt;💡 Subsequent Renders&lt;/h4&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker stop {container}&lt;/code&gt; Graceful stop the container&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Runs after render completes&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker kill {container}&lt;/code&gt; Force to stop the container&lt;/p&gt;
+&lt;p&gt;-Only if shallow comparison detects changes in dependencies&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker restart {container}&lt;/code&gt; Stop and start the container&lt;/p&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker rm {container}&lt;/code&gt; Destroy the container&lt;/p&gt;
+&lt;h4 id=&quot;️-the-render-cycle&quot;&gt;⭕️ The Render Cycle&lt;/h4&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker rm -f {container}&lt;/code&gt; Force destroy running the container, kill + rm&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps&lt;/code&gt; List all the running containers&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker container ls&lt;/code&gt; List all the running containers&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker ps -a&lt;/code&gt; List all the containers&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker logs {container}&lt;/code&gt; Show the container log&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker container logs {container}&lt;/code&gt; Show the container log&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec {container} args&lt;/code&gt; Run a command in the container&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec {options} {container} {command}&lt;/code&gt; Run command in specific container
-Avaliable options:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-d&lt;/code&gt; run in background&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-i&lt;/code&gt; stdin mode&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-t&lt;/code&gt; interactive pseudo-tty&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker exec -it {container} bash&lt;/code&gt; This command could be used to run the container’s bash terminal&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker attach -it {container}&lt;/code&gt; This command could also run the container’s bash terminal, but what’s difference is that if we run &lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt; after this command, the container will stop as well.&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;docker images&lt;/code&gt; List all local images&lt;/p&gt;
-
-&lt;h2 id=&quot;k8s&quot;&gt;K8S&lt;/h2&gt;</content><author><name>QYF</name></author><summary type="html">Docker docker create {image} Create a container based on {image}</summary></entry><entry><title type="html">📕【Tool】Kafka basic idea</title><link href="http://localhost:4000/2021/10/02/Kafka.html" rel="alternate" type="text/html" title="📕【Tool】Kafka basic idea" /><published>2021-10-02T00:00:00+10:00</published><updated>2023-02-18T15:24:08+11:00</updated><id>http://localhost:4000/2021/10/02/Kafka</id><content type="html" xml:base="http://localhost:4000/2021/10/02/Kafka.html">&lt;p&gt;Note for Kafka videos by confluent, which provides great help.
-[Link][https://www.youtube.com/watch?v=jY02MB-sz8I&amp;amp;list=RDCMUCmZz-Gj3caLLzEWBtbYUXaA&amp;amp;index=3]&lt;/p&gt;
-
-&lt;h2 id=&quot;为什么需要消息中间件&quot;&gt;为什么需要消息中间件？&lt;/h2&gt;
-
-&lt;p&gt;事件驱动的程序越来越多，从以前的静态到如今不断的事件流，对于一个程序需要处理的事情更加多了，更追求实时性，需要一个中间件有一下特点&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Single platform to connect every one to every event&lt;/li&gt;
-  &lt;li&gt;Real-time stream of events&lt;/li&gt;
-  &lt;li&gt;All events stored fro historical view&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;element&quot;&gt;Element&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;Producers&lt;/strong&gt;: The application which generate data and push(write) into the kafka cluster
-&lt;strong&gt;Kafka cluster&lt;/strong&gt;: The place store data, it contains many brokers
-&lt;strong&gt;Consumers&lt;/strong&gt;: The applicatin which poll(read) data from the Kafka cluster
-&lt;strong&gt;Zookeeper&lt;/strong&gt;: Used for cluster management, failure detection &amp;amp; recovery, basically all the distrubuted stuff.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Producers and consumers are total decoupling.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/%E6%88%AA%E5%B1%8F2021-10-01%20%E4%B8%8B%E5%8D%885.49.32.png&quot; alt=&quot;Kafka Element&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Topic&lt;/strong&gt;: It’s like categories used to organize message. Producers write to topic and consumer read from topic. Topic 就是数据主题，是数据记录发布的地方,可以用来区分业务系统。&lt;a href=&quot;https://kafka.apachecn.org/intro.html&quot;&gt;Linkd&lt;/a&gt;
-&lt;strong&gt;Partition&lt;/strong&gt;: Topic are partitioned across multiple nodes physically, and the node here is partition, each node is in different broker.
-&lt;strong&gt;Broker&lt;/strong&gt;:&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Broken handles many partitions&lt;/li&gt;
-  &lt;li&gt;Partition stored on Broker’s disk&lt;/li&gt;
-  &lt;li&gt;Partition is log file, append only&lt;/li&gt;
-  &lt;li&gt;Broker replication: for a partition in broker A, that it would have a copy of it in other broker. So there would be a leader partition and a follower partition. Follower partition need to make sure update from the leader partition as quickly as possible.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;Why we need partition?&lt;/em&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Scalable&lt;/li&gt;
-  &lt;li&gt;Replication&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;How do we know which partition the message go to when writing as a producer?&lt;/em&gt;&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Depends on Kafka, Kafka use round robin method to decide which partition the message go to.&lt;/li&gt;
-  &lt;li&gt;When writing a message, passing a key to Kafka, Kafka would use &lt;code class=&quot;highlighter-rouge&quot;&gt;hash(key) % number_of_partitions&lt;/code&gt; to decide which partition to write into.&lt;/li&gt;
-  &lt;li&gt;Customise by user&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;em&gt;When we need to method 2 above?&lt;/em&gt;
-When the user want some kind of message with ordered, and the order of event is important, then just give those message a same key. By using method 2, all those data would go to one partition. And In the partition, it could make sure that those message is ordered by writing time.&lt;/p&gt;
-
-&lt;h2 id=&quot;how-kafka-works&quot;&gt;How Kafka works&lt;/h2&gt;
-
-&lt;h4 id=&quot;partition-leadership--replication&quot;&gt;&lt;strong&gt;Partition leadership &amp;amp; Replication&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;The producers and customers are always ‘&lt;em&gt;communicate&lt;/em&gt;’ with the leader of each partition&lt;/p&gt;
-
-&lt;p&gt;If one of the broker dies, for example broker 4, a new leader for partition 4 would be elected right away, can continue the writing and reading for this partition&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Partition-Leadership.png&quot; alt=&quot;Partition Leader &amp;amp; Replication&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;data-retention-policy&quot;&gt;&lt;strong&gt;Data retention policy&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;The duration a partition store the data is configuable, by default it would be kept for a week. 
-When the newest message in the segment is older than the retention period, then it would be a expired segment and deleted in the partition.&lt;/p&gt;
-
-&lt;h4 id=&quot;producer-design&quot;&gt;&lt;strong&gt;Producer Design&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Producer-Design.png&quot; alt=&quot;Produce-Design&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;For each producer record, it would be serialised first and then the partitioner would decide which partition this message should go to.&lt;/p&gt;
-
-&lt;p&gt;If the key in the record, then it would use round-robin to decide what to go defaultly, otherwise use function &lt;code class=&quot;highlighter-rouge&quot;&gt;hash(key) % number_of_partitions&lt;/code&gt;  to decide which partition to put in the message&lt;/p&gt;
-
-&lt;h4 id=&quot;producer-guarantees&quot;&gt;&lt;a name=&quot;ProducerGuarantees&quot;&gt;&lt;strong&gt;Producer Guarantees&lt;/strong&gt;&lt;/a&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/producer-guarantees.png&quot; alt=&quot;Producer-Guarantees&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;There is three types of level to guarantees the writing of the message&lt;/p&gt;
-
-&lt;ol&gt;
+&lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;Do not wait any ACK for any broker, just send the message and then send the next one directly.&lt;/p&gt;
-
-    &lt;p&gt;Data Losing: ⭐️⭐️⭐️⭐️
-Latency: ⭐️&lt;/p&gt;
+    &lt;p&gt;Component renders (due to state/props change)&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Wait the ACK from the leader, the leader would send the ACK after it writing the message into the disk&lt;/p&gt;
-
-    &lt;p&gt;Data Losing: ⭐️⭐️
-Latency: ⭐️⭐️⭐️&lt;/p&gt;
+    &lt;p&gt;React compares each dependency with previous values&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Wait the ACK from the leader and the all followers&lt;/p&gt;
-
-    &lt;p&gt;Data Losing: ⭐️
-Latency: ⭐️⭐️⭐️⭐️⭐️&lt;/p&gt;
+    &lt;p&gt;Effect executes if any dependency changed&lt;/p&gt;
   &lt;/li&gt;
-&lt;/ol&gt;
+&lt;/ul&gt;
 
-&lt;h4 id=&quot;customer-rebalances&quot;&gt;&lt;strong&gt;Customer Rebalances&lt;/strong&gt;&lt;/h4&gt;
+&lt;hr /&gt;
 
-&lt;p&gt;&lt;img src=&quot;https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Customer-Rebalance.png&quot; alt=&quot;Customer-Rebalances&quot; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;compacted-topics&quot;&gt;&lt;strong&gt;Compacted Topics&lt;/strong&gt;&lt;/h4&gt;
-
-&lt;p&gt;When the consumer only want to know the lastest log message for a key(It measn for each message, it need to have a kep). The log only keep the newest value of a key&lt;/p&gt;
-
-&lt;p&gt;Compacted topic 适用于当消费者只关注每个key最新的那个消息，其他之前的消息并不关心时，使用compacted topic后，Kafka会定期将重复key的‘旧’消息删除，并且消费时提供最新的消息&lt;/p&gt;
-
-&lt;h2 id=&quot;生产端producer&quot;&gt;生产端(Producer)&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;#ProducerGuarantees&quot;&gt;应答机制&lt;/a&gt;
-应答机制有三种设置，各有利弊，详情看链接&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#数据丢失与数据重复 (Message Delivery)&quot;&gt;数据丢失与数据重复&lt;/a&gt;&lt;/li&gt;
+&lt;h4 id=&quot;-key-points&quot;&gt;🔑 Key Points&lt;/h4&gt;
+&lt;ul&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;#幂等发送设计的优势(Idempotence message sending)&quot;&gt;幂等发送设计的优势&lt;/a&gt;&lt;/p&gt;
+    &lt;p&gt;useEffect runs asynchronously after render completes&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;Never send duplicate message, but maybe missing -&amp;gt; At most one&lt;/li&gt;
-  &lt;li&gt;Never miss any message, but maybe duplicate -&amp;gt; At least one&lt;/li&gt;
-  &lt;li&gt;Never miss and duplicate -&amp;gt; Exactly one&lt;/li&gt;
-&lt;/ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Parent re-renders will cause child effects to re-evaluate&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;State updates (useState) trigger re-renders which may trigger effects&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;em&gt;Why we need exactly one?&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;对于一些交易系统来说，多一次消费或者少一次消费都是不被允许的，这时候保证Exactly One就十分重要
-For some system like trading system, duplicate trading message or missing trading message is not allowed, to gurantee exactly one is needed.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;How to achieve &lt;strong&gt;At most one&lt;/strong&gt; or &lt;strong&gt;At least one&lt;/strong&gt;?&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;将应答机制中的ACK配置设置为0，Kafka这时候就是&lt;strong&gt;At most one&lt;/strong&gt;状态
-将应答机制中的ACK配置设置为-1，Kafka这时候是&lt;strong&gt;At lease one&lt;/strong&gt;状态&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;How to achieve &lt;strong&gt;Exactly One&lt;/strong&gt; as producer sending message？&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;At least one + 幂等 == Exactly One.  为了保证消息不重复被写入库，Kafka在producer端引入了幂等处理。&lt;a href=&quot;https://zh.wikipedia.org/wiki/%E5%86%AA%E7%AD%89&quot;&gt;什么是幂等处理？&lt;/a&gt;
-对于每个Producer，初始化时候赋予PID，对于发送的每个消息&amp;lt;Topic, Patition&amp;gt;都有一个从0开始的Sequence number。
-在Broke端，对于每个&amp;lt;PID, Topic, Partition&amp;gt;都维护一个序列号，没收到一次消息该序列号+1，收到消息后，需要校验序列号是否满足该&amp;lt;PID, Topic, Partition&amp;gt;的最大序列号+1，如果不满足不接受该消息&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;大于最大序列号 + 1，则认为有数据还没写入或者在传输路上，该数据不会被采纳，抛出InvalidSequenceNumber&lt;/li&gt;
-  &lt;li&gt;小于最大序列号 + 1，则认为该数据是重复数据，同样不被采纳，抛出DuplicateSequenceNumber异常&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h4 id=&quot;幂等发送设计的优势idempotence-message-sending&quot;&gt;幂等发送设计的优势(Idempotence message sending)&lt;/h4&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;保证每个partition中的消息是按顺序的，因为不按顺序会被拒绝写入磁盘&lt;/li&gt;
-  &lt;li&gt;保证每个消息不会重复被写入磁盘导致重复消费&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;注意，在Producer加入了幂等性发送的配置后，仅仅能保证单个Producer在同一个Session中单Topic单个分区生产的数据Exactly One，&lt;/p&gt;</content><author><name>QYF</name></author><summary type="html">Note for Kafka videos by confluent, which provides great help. [Link][https://www.youtube.com/watch?v=jY02MB-sz8I&amp;amp;list=RDCMUCmZz-Gj3caLLzEWBtbYUXaA&amp;amp;index=3]</summary></entry><entry><title type="html">📕【Database】MySQL的索引</title><link href="http://localhost:4000/2021/09/20/MySQL's-Index.html" rel="alternate" type="text/html" title="📕【Database】MySQL的索引" /><published>2021-09-20T00:00:00+10:00</published><updated>2023-02-18T15:24:08+11:00</updated><id>http://localhost:4000/2021/09/20/MySQL's-Index</id><content type="html" xml:base="http://localhost:4000/2021/09/20/MySQL's-Index.html">&lt;p&gt;&lt;a href=&quot;#Hash索引&quot;&gt;Hash索引&lt;/a&gt;
-&lt;a href=&quot;#B+树索引&quot;&gt;B+树索引&lt;/a&gt;
-&lt;a href=&quot;#Hash索引和B+树索引有什么区别？&quot;&gt;Hash索引和B+树索引有什么区别？&lt;/a&gt;
-&lt;a href=&quot;#为什么不使用B树而使用B+树？&quot;&gt;为什么不使用B树而使用B+树？&lt;/a&gt;
-&lt;a href=&quot;#聚集索引(Cluster index)&quot;&gt;聚集索引(Cluster index)&lt;/a&gt;
-&lt;a href=&quot;#非聚集索引(Uncluster index)&quot;&gt;非聚集索引(Uncluster index)&lt;/a&gt;
-&lt;a href=&quot;#联合索引&quot;&gt;联合索引&lt;/a&gt;
-&lt;a href=&quot;#覆盖索引&quot;&gt;覆盖索引&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;hash索引&quot;&gt;Hash索引&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Hash索引主要运用了哈希表的数据结构，使用键值对的方式存储数据。通过Key的哈希值能快速找到相应的Value，所以时间复杂度最优情况下会是O(1)&lt;/li&gt;
-  &lt;li&gt;使用哈希表就无法避免一个问题 – 哈希冲突。在极端下，哈希冲突无法很好解决的话，会导致查询的时间复杂度趋于O(n)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;b树索引&quot;&gt;B+树索引&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;B+树是一种特殊的平衡多叉树，每一个非叶子结点储存的仅仅是对下一层的索引，所有的数据都只存于最后一层叶子结点，并且最后一层叶子结点是排好序且每个结点直接用双向链表连接。每一次查询都稳定在O(m, m=树高)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;hash索引和b树索引有什么区别&quot;&gt;Hash索引和B+树索引有什么区别？&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;查询的时间复杂度不同。Hash索引最优情况下是O(1)，B+树是稳定O(m)&lt;/li&gt;
-  &lt;li&gt;Hash索引会有哈希冲突的情况，对查询的时间复杂度有较大影响&lt;/li&gt;
-  &lt;li&gt;Hash索引无法解决范围查询，相反B+树十分擅长解决范围查询&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;为什么不使用b树而使用b树&quot;&gt;为什么不使用B树而使用B+树？&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;什么是B树 —- B树可以理解为是一个平衡多叉树，与B+树最大的不同在于他的每个结点不仅仅储存对下一层的索引，还同时储存数据&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;查询IO层面&lt;/strong&gt;。因为B+树的非叶子结点储存的仅仅是索引，相比于B树(既储存索引，又储存数据)，同一个16K的结点，B+树结点中的索引数会更加多。因此B+树非叶子结点的子分支也会多很多。储存相同量的数据，从树的形状看，B+树在横轴上会更加宽，层数也会相较B树小，所以每次索引查询数据时，所需要的IO也更加小。&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;范围查询的支持层面&lt;/strong&gt;。因为B+树特殊的数据结构，对范围查询特别友好，找到符合条件数据在叶子结点的起始位置，利用双向链表即可。但使用B树进行范围查询有需要跨层再次查询的机会，会产生不必要的IO&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;查询稳定性层面&lt;/strong&gt;。对于B树，查询同一数据不同的索引条件下会有不同的IO次数，依赖于该数据在B树的第几层。但是对于B+树来水，查询效率是稳定的，每一次都稳定O(m, m=树高)&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;聚集索引和非聚集索引&quot;&gt;聚集索引和非聚集索引&lt;/h2&gt;
-
-&lt;h3 id=&quot;聚集索引cluster-index&quot;&gt;聚集索引(Cluster index)&lt;/h3&gt;
-
-&lt;p&gt;聚集索引是B+树索引的某一种具体例子，每张表格都会有一个基于主键的聚集索引，其叶子结点储存的是该表的所有数据，对于利用主键的范围查询速度非常快，每一次查询的复杂度就是B+树的层高&lt;/p&gt;
-
-&lt;h3 id=&quot;非聚集索引uncluster-index&quot;&gt;非聚集索引(Uncluster index)&lt;/h3&gt;
-
-&lt;p&gt;非聚集索引和聚集索引最大的区别是，在非聚集索引的叶子结点中，储存的仅仅是索引的键值和拥有该键值数据的主键，数据库会通过主键和使用主键建立的聚集索引找到相应的数据。简单来说，非聚集索引只能找到符合条件的数据的主键，为了找到符合条件的数据需要再一次使用基于主键的聚集索引查询一次。&lt;/p&gt;
-
-&lt;p&gt;举个🌰 有一个表格User_table有三个数据，一是id，二是名字，三是年龄。因为id是主键，所以当我们创建表格时，MySQL就已经自动创建id作为键值的聚集索引。但这时候，小明有需要通过名字查找数据的需求，为了加快查找的速度，那么他对User_table中的名字创建了一个名字作为键值的索引，该索引也就是非聚集索引。
-小明输入 SELECT * FROM User_table WHERE name = Harry时，MySQL需要：通过基于名字的非聚集索引找到键值为Harry的数据，记录下该数据中的主键Id，记为id_Harry，再去到基于主键的聚集索引中查找id为id_Harry的数据，这时候就完成了一次通过名字查找表格中的所有信息，这个过程也就做回表。&lt;/p&gt;
-
-&lt;h2 id=&quot;其他索引&quot;&gt;其他索引&lt;/h2&gt;
-
-&lt;h3 id=&quot;联合索引&quot;&gt;联合索引&lt;/h3&gt;
-
-&lt;p&gt;联合索引是一种基于多个索引列创建的非聚集索引。&lt;/p&gt;
-
-&lt;p&gt;最大的好处就是使用联合索引时，其会按由左到右的健值对数据进行排序。在特定情况下，使用联合索引可以避免多一次排序操作。&lt;/p&gt;
-
-&lt;p&gt;以下引用《MySQL技术内幕》的例子&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&quot;language-SQL&quot;&gt;CREATE TABLE record (
-	userid INT UNSIGNED NOT NULL,
-  record_date DATE
-)ENGINE=InnoDB
-
-INSERT INTO record VALUE (1, '2020-01-01')
-INSERT INTO record VALUE (2, '2020-01-01')
-INSERT INTO record VALUE (3, '2020-01-01')
-INSERT INTO record VALUE (1, '2020-02-01')
-INSERT INTO record VALUE (3, '2020-02-01')
-INSERT INTO record VALUE (1, '2020-04-01')
-
-ALTER TABLE record ADD KEY ( userid )
-ALTER TABLE record ADD KEY ( userid, record_data)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;我们创建了两个索引，一个以userid为索引健，一个以( userid, record_date) 为索引健，也就是说我们当前有两个B+树，一棵是以userid排序的；一棵是先以userid排序，在同userid下又以record_date排序的。&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;对于这个sql语句，优化器选择以userid排序的B+树进行索引&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;where&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ORDER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这个sql语句用两个索引当中的哪一个都可以，但是因为语句要求对recored_date进行排序，而同时因联合索引( userid, record_date)的缘故，其索引树针对同id的数据进行了基于record_date排序，所以优化器会选择以( userid, record_date) 为索引健的B+树执行sql语句，避免了一次排序操作&lt;/p&gt;
-
-&lt;h3 id=&quot;覆盖索引covering-indexes&quot;&gt;覆盖索引(Covering Indexes)&lt;/h3&gt;
-
-&lt;p&gt;正常的一次不基于主键的非聚集索引查询，都需要在查到相关符合条件数据的主键后，再对主键进行一次使用聚集索引的回表操作，覆盖索引的意思是，仅仅通过一个对非聚集索引B+树的查询就可以得到需要的查询记录，避免回表。&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;CREATE&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-	&lt;span class=&quot;n&quot;&gt;userid&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;INT&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;UNSIGNED&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;NOT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;record_date&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;DATE&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ENGINE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InnoDB&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-01-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-01-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-01-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-02-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-02-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;INSERT&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;INTO&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;VALUE&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'2020-04-01'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;ALTER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;TABLE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;record&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;ADD&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;KEY&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userid&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;例如以上例子：&lt;/p&gt;
-
-&lt;p&gt;当我们运行  &lt;code class=&quot;highlighter-rouge&quot;&gt;select * from record where userid=1&lt;/code&gt;时，因为使用了机遇 userid的非聚集索引，且非聚集索引的每个节点只有(主键， userid)，而缺失了record_date的数据，所以这时候不得不做一次回表操作，拿出所有符合条件的主键id在基于主键的聚集索引下找到相关的数据行，并包括record_data的值。&lt;/p&gt;
-
-&lt;p&gt;而当我们运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;select count(*) from record where userid=1&lt;/code&gt;时就不需要回表操作了，因为仅仅通过一次对非聚集B+树的查询就可以获得userid为1数据的数量，这就是&lt;strong&gt;覆盖查询&lt;/strong&gt;，避免了一次回表，减少了IO操作。&lt;/p&gt;
-
-&lt;p&gt;同理可得，当我们 &lt;code class=&quot;highlighter-rouge&quot;&gt;ALTER TABLE record ADD KEY ( userid, record_data)&lt;/code&gt;后，再运行 &lt;code class=&quot;highlighter-rouge&quot;&gt;select (userid, record_date) from record where userid=1&lt;/code&gt;就不需要回表了，因为基于&lt;code class=&quot;highlighter-rouge&quot;&gt;( userid, record_data)&lt;/code&gt;的非聚集B+树的叶子节点数据中有userid和record_data，不必再一次回表操作了。&lt;/p&gt;</content><author><name>QYF</name></author><summary type="html">Hash索引 B+树索引 Hash索引和B+树索引有什么区别？ 为什么不使用B树而使用B+树？ 聚集索引(Cluster index) 非聚集索引(Uncluster index) 联合索引 覆盖索引</summary></entry><entry><title type="html">Welcome to jekyll</title><link href="http://localhost:4000/2021/09/15/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to jekyll" /><published>2021-09-15T00:00:00+10:00</published><updated>2021-09-19T18:41:58+10:00</updated><id>http://localhost:4000/2021/09/15/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/2021/09/15/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+&lt;hr /&gt;</content><author><name>Matt Qin</name></author><summary type="html">📝 Why Do We Need useEffect in React?</summary></entry><entry><title type="html">Welcome to jekyll</title><link href="http://localhost:4000/2021/09/15/welcome-to-jekyll.html" rel="alternate" type="text/html" title="Welcome to jekyll" /><published>2021-09-15T00:00:00+10:00</published><updated>2025-04-25T13:38:09+10:00</updated><id>http://localhost:4000/2021/09/15/welcome-to-jekyll</id><content type="html" xml:base="http://localhost:4000/2021/09/15/welcome-to-jekyll.html">&lt;p&gt;You’ll find this post in your &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
 
 &lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
 
@@ -739,4 +187,4 @@ ALTER TABLE record ADD KEY ( userid, record_data)
 &lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Tom'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints 'Hi, Tom' to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>QYF</name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com/docs/home&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://talk.jekyllrb.com/&quot;&gt;Jekyll Talk&lt;/a&gt;.&lt;/p&gt;</content><author><name>Matt Qin</name></author><summary type="html">You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.</summary></entry></feed>
