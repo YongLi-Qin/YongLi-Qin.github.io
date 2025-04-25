@@ -1,0 +1,158 @@
+I"9"<p>Note for Kafka videos by confluent, which provides great help.
+[Link][https://www.youtube.com/watch?v=jY02MB-sz8I&amp;list=RDCMUCmZz-Gj3caLLzEWBtbYUXaA&amp;index=3]</p>
+
+<h2 id="为什么需要消息中间件">为什么需要消息中间件？</h2>
+
+<p>事件驱动的程序越来越多，从以前的静态到如今不断的事件流，对于一个程序需要处理的事情更加多了，更追求实时性，需要一个中间件有一下特点</p>
+
+<ol>
+  <li>Single platform to connect every one to every event</li>
+  <li>Real-time stream of events</li>
+  <li>All events stored fro historical view</li>
+</ol>
+
+<h2 id="element">Element</h2>
+
+<p><strong>Producers</strong>: The application which generate data and push(write) into the kafka cluster
+<strong>Kafka cluster</strong>: The place store data, it contains many brokers
+<strong>Consumers</strong>: The applicatin which poll(read) data from the Kafka cluster
+<strong>Zookeeper</strong>: Used for cluster management, failure detection &amp; recovery, basically all the distrubuted stuff.</p>
+
+<p><em>Producers and consumers are total decoupling.</em></p>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/%E6%88%AA%E5%B1%8F2021-10-01%20%E4%B8%8B%E5%8D%885.49.32.png" alt="Kafka Element" /></p>
+
+<p><strong>Topic</strong>: It’s like categories used to organize message. Producers write to topic and consumer read from topic. Topic 就是数据主题，是数据记录发布的地方,可以用来区分业务系统。<a href="https://kafka.apachecn.org/intro.html">Linkd</a>
+<strong>Partition</strong>: Topic are partitioned across multiple nodes physically, and the node here is partition, each node is in different broker.
+<strong>Broker</strong>:</p>
+
+<ol>
+  <li>Broken handles many partitions</li>
+  <li>Partition stored on Broker’s disk</li>
+  <li>Partition is log file, append only</li>
+  <li>Broker replication: for a partition in broker A, that it would have a copy of it in other broker. So there would be a leader partition and a follower partition. Follower partition need to make sure update from the leader partition as quickly as possible.</li>
+</ol>
+
+<p><em>Why we need partition?</em></p>
+
+<ol>
+  <li>Scalable</li>
+  <li>Replication</li>
+</ol>
+
+<p><em>How do we know which partition the message go to when writing as a producer?</em></p>
+
+<ol>
+  <li>Depends on Kafka, Kafka use round robin method to decide which partition the message go to.</li>
+  <li>When writing a message, passing a key to Kafka, Kafka would use <code class="highlighter-rouge">hash(key) % number_of_partitions</code> to decide which partition to write into.</li>
+  <li>Customise by user</li>
+</ol>
+
+<p><em>When we need to method 2 above?</em>
+When the user want some kind of message with ordered, and the order of event is important, then just give those message a same key. By using method 2, all those data would go to one partition. And In the partition, it could make sure that those message is ordered by writing time.</p>
+
+<h2 id="how-kafka-works">How Kafka works</h2>
+
+<h4 id="partition-leadership--replication"><strong>Partition leadership &amp; Replication</strong></h4>
+
+<p>The producers and customers are always ‘<em>communicate</em>’ with the leader of each partition</p>
+
+<p>If one of the broker dies, for example broker 4, a new leader for partition 4 would be elected right away, can continue the writing and reading for this partition</p>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Partition-Leadership.png" alt="Partition Leader &amp; Replication" /></p>
+
+<h4 id="data-retention-policy"><strong>Data retention policy</strong></h4>
+
+<p>The duration a partition store the data is configuable, by default it would be kept for a week. 
+When the newest message in the segment is older than the retention period, then it would be a expired segment and deleted in the partition.</p>
+
+<h4 id="producer-design"><strong>Producer Design</strong></h4>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Producer-Design.png" alt="Produce-Design" /></p>
+
+<p>For each producer record, it would be serialised first and then the partitioner would decide which partition this message should go to.</p>
+
+<p>If the key in the record, then it would use round-robin to decide what to go defaultly, otherwise use function <code class="highlighter-rouge">hash(key) % number_of_partitions</code>  to decide which partition to put in the message</p>
+
+<h4 id="producer-guarantees"><a name="ProducerGuarantees"><strong>Producer Guarantees</strong></a></h4>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/producer-guarantees.png" alt="Producer-Guarantees" /></p>
+
+<p>There is three types of level to guarantees the writing of the message</p>
+
+<ol>
+  <li>
+    <p>Do not wait any ACK for any broker, just send the message and then send the next one directly.</p>
+
+    <p>Data Losing: ⭐️⭐️⭐️⭐️
+Latency: ⭐️</p>
+  </li>
+  <li>
+    <p>Wait the ACK from the leader, the leader would send the ACK after it writing the message into the disk</p>
+
+    <p>Data Losing: ⭐️⭐️
+Latency: ⭐️⭐️⭐️</p>
+  </li>
+  <li>
+    <p>Wait the ACK from the leader and the all followers</p>
+
+    <p>Data Losing: ⭐️
+Latency: ⭐️⭐️⭐️⭐️⭐️</p>
+  </li>
+</ol>
+
+<h4 id="customer-rebalances"><strong>Customer Rebalances</strong></h4>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/Customer-Rebalance.png" alt="Customer-Rebalances" /></p>
+
+<h4 id="compacted-topics"><strong>Compacted Topics</strong></h4>
+
+<p>When the consumer only want to know the lastest log message for a key(It measn for each message, it need to have a kep). The log only keep the newest value of a key</p>
+
+<p>Compacted topic 适用于当消费者只关注每个key最新的那个消息，其他之前的消息并不关心时，使用compacted topic后，Kafka会定期将重复key的‘旧’消息删除，并且消费时提供最新的消息</p>
+
+<h2 id="生产端producer">生产端(Producer)</h2>
+
+<ol>
+  <li><a href="#ProducerGuarantees">应答机制</a>
+应答机制有三种设置，各有利弊，详情看链接</li>
+  <li><a href="#数据丢失与数据重复 (Message Delivery)">数据丢失与数据重复</a></li>
+  <li>
+    <p><a href="#幂等发送设计的优势(Idempotence message sending)">幂等发送设计的优势</a></p>
+  </li>
+  <li>Never send duplicate message, but maybe missing -&gt; At most one</li>
+  <li>Never miss any message, but maybe duplicate -&gt; At least one</li>
+  <li>Never miss and duplicate -&gt; Exactly one</li>
+</ol>
+
+<p><em>Why we need exactly one?</em></p>
+
+<p>对于一些交易系统来说，多一次消费或者少一次消费都是不被允许的，这时候保证Exactly One就十分重要
+For some system like trading system, duplicate trading message or missing trading message is not allowed, to gurantee exactly one is needed.</p>
+
+<p><em>How to achieve <strong>At most one</strong> or <strong>At least one</strong>?</em></p>
+
+<p>将应答机制中的ACK配置设置为0，Kafka这时候就是<strong>At most one</strong>状态
+将应答机制中的ACK配置设置为-1，Kafka这时候是<strong>At lease one</strong>状态</p>
+
+<p><em>How to achieve <strong>Exactly One</strong> as producer sending message？</em></p>
+
+<p>At least one + 幂等 == Exactly One.  为了保证消息不重复被写入库，Kafka在producer端引入了幂等处理。<a href="https://zh.wikipedia.org/wiki/%E5%86%AA%E7%AD%89">什么是幂等处理？</a>
+对于每个Producer，初始化时候赋予PID，对于发送的每个消息&lt;Topic, Patition&gt;都有一个从0开始的Sequence number。
+在Broke端，对于每个&lt;PID, Topic, Partition&gt;都维护一个序列号，没收到一次消息该序列号+1，收到消息后，需要校验序列号是否满足该&lt;PID, Topic, Partition&gt;的最大序列号+1，如果不满足不接受该消息</p>
+
+<ol>
+  <li>大于最大序列号 + 1，则认为有数据还没写入或者在传输路上，该数据不会被采纳，抛出InvalidSequenceNumber</li>
+  <li>小于最大序列号 + 1，则认为该数据是重复数据，同样不被采纳，抛出DuplicateSequenceNumber异常</li>
+</ol>
+
+<h4 id="幂等发送设计的优势idempotence-message-sending">幂等发送设计的优势(Idempotence message sending)</h4>
+
+<ol>
+  <li>保证每个partition中的消息是按顺序的，因为不按顺序会被拒绝写入磁盘</li>
+  <li>保证每个消息不会重复被写入磁盘导致重复消费</li>
+</ol>
+
+<p>注意，在Producer加入了幂等性发送的配置后，仅仅能保证单个Producer在同一个Session中单Topic单个分区生产的数据Exactly One，</p>
+
+:ET

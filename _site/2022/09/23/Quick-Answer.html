@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<meta name="generator" content="Jekyll v4.0.1" />
+<meta property="og:title" content="🗂 【Daily】Question with answer - 2022" />
+<meta name="author" content="QYF" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Summary This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year. Why we need replication (master-slave) of database? Avoid single point failure Scalability Performance Data security when running backup Analytics" />
+<meta property="og:description" content="Summary This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year. Why we need replication (master-slave) of database? Avoid single point failure Scalability Performance Data security when running backup Analytics" />
+<link rel="canonical" href="http://localhost:4000/2022/09/23/Quick-Answer.html" />
+<meta property="og:url" content="http://localhost:4000/2022/09/23/Quick-Answer.html" />
+<meta property="og:site_name" content="Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-23T00:00:00+10:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🗂 【Daily】Question with answer - 2022" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2022/09/23/Quick-Answer.html","headline":"🗂 【Daily】Question with answer - 2022","datePublished":"2022-09-23T00:00:00+10:00","dateModified":"2023-04-02T17:41:56+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/09/23/Quick-Answer.html"},"author":{"@type":"Person","name":"QYF"},"description":"Summary This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year. Why we need replication (master-slave) of database? Avoid single point failure Scalability Performance Data security when running backup Analytics","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="/./favicon.ico?" />
+  <link rel="stylesheet" href="http://localhost:4000/assets/css/agate.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Blog" /></head><body>
+    <main class="page-content" aria-label="Content">
+        <div class="wrapper">
+            <article
+  class="post h-entry"
+  itemscope
+  itemtype="http://schema.org/BlogPosting"
+>
+  <head>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <title>🗂 【Daily】Question with answer - 2022</title>
+  </head>
+  <header class="post-header">
+    <div class="post-back">
+      <a class="black-link" href="http://localhost:4000">
+        ← Index
+      </a>
+    </div>
+
+    <h1 class="post-title p-name" itemprop="name headline">
+      🗂 【Daily】Question with answer - 2022
+    </h1>
+    <p class="post-meta">
+      <time
+        class="dt-published"
+        datetime="2022-09-23T00:00:00+10:00"
+        itemprop="datePublished"
+      >Sep 23, 2022
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="summary">Summary</h2>
+<p>This post contains some short answers of the technology questions I met in my daily work in 2022, including some other LINK for further details answers. Will keep updating this post for a year.</p>
+<h3 id="why-we-need-replication-master-slave-of-database">Why we need replication (master-slave) of database?</h3>
+<ol>
+  <li>Avoid single point failure</li>
+  <li>Scalability</li>
+  <li>Performance</li>
+  <li>Data security when running backup</li>
+  <li>Analytics</li>
+</ol>
+
+<ul>
+  <li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication.html">Mysql Replication</a></li>
+  <li><a href="https://hevodata.com/learn/mysql-master-slave-replication/#a2">Master-Slave Replication</a></li>
+</ul>
+
+<hr />
+
+<h3 id="how-replication-synchronize-data-from-master">How replication synchronize data from master?</h3>
+<p>Basically, all the events ran in master db, will re-run in replication db as well to achieve synchronization. Every time a event happened in master db, will be written to bin-log. Then the replication read the bin-log and run the events.</p>
+
+<ul>
+  <li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication-formats.html">How replication runs</a></li>
+</ul>
+
+<hr />
+
+<h3 id="replication-format">Replication format?</h3>
+<p>Bin-log have two different formats, could choose one of them or mix of them.</p>
+<ol>
+  <li>Statement-based</li>
+  <li>Row-based</li>
+</ol>
+
+<ul>
+  <li><a href="https://dev.mysql.com/doc/refman/8.0/en/replication-sbr-rbr.html">Compare Statement-based and Row-based</a></li>
+</ul>
+
+<hr />
+<h3 id="what-is-message-oriented-middleware">What is message-oriented middleware?</h3>
+<p>Message-oriented middleware is a kind of infrastructure which supports sending and receiving data (message) to and from distributed systems. Both sending and receiving data is asynchronous in MOM, which means the sender application could just focusing on sending message, and doesn’t need to put effect on how the message been received. Generally, a MOM consists of three main parts: <strong>producer</strong>, <strong>message queue</strong>, <strong>consumer</strong>.</p>
+
+<p>Advantage:</p>
+<ol>
+  <li>Lower coupling</li>
+  <li>Scalability</li>
+  <li>Asynchronous</li>
+  <li>Flexibility</li>
+</ol>
+
+<p>Disadvantage:</p>
+<ol>
+  <li>Topology</li>
+</ol>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/MessageOrientedMiddleware.png" alt="Message-Oriented Middleware" /></p>
+
+<ul>
+  <li><a href="https://www.oreilly.com/library/view/data-lake-for/9781787281349/01b64a9d-bb69-4df8-a6ed-cd15e2ff8e46.xhtml">Kafka as message-oriented middleware</a></li>
+  <li><a href="https://blogs.msmvps.com/peterritchie/2011/07/14/message-oriented-architectures/">Message-oriented Architectures</a></li>
+  <li><a href="https://www.geeksforgeeks.org/what-is-message-oriented-middleware-mom/">What is Message Oriented Middleware (MOM)?</a></li>
+</ul>
+
+  </div>
+
+  <a class="u-url" href="/2022/09/23/Quick-Answer.html" hidden></a>
+</article>
+
+<div class="ant-alert mb-0">
+  <ul>
+    <li>Posted at 2022-09-23，Updated at 2023-04-02
+    </li>
+  </ul>
+
+</div>
+
+<div class="page-navigation">
+  
+  <a class="prev" href="/2022/07/27/Command.html">&laquo; Prev</a>
+   
+  <a class="next" href="/2023/03/04/Quick-Answer.html">Next &raquo;</a>
+  
+</div><script src="https://giscus.app/client.js" data-repo="HarryQin99/HarryQin99.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnk0MDc4ODgxMzk=" data-category="General" data-category-id="DIC_kwDOGE_hC84CVdSA"
+        data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
+        data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
+        </script>
+        </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+    <div class="wrapper">
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <ul class="contact-list">
+            <li class="p-name"><a class="black-link" href="http://localhost:4000/about.html">
+                  QYF 
+                </a></li><li>
+              <a class="u-email black-link" href="mailto:harryqinyf@outlook.com">harryqinyf@outlook.com</a></li></ul>
+        </div>
+      </div>
+    </div>
+  </footer></body>
+</html>

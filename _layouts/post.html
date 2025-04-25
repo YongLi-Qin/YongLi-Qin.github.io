@@ -1,0 +1,71 @@
+---
+layout: default
+---
+
+<article
+  class="post h-entry"
+  itemscope
+  itemtype="http://schema.org/BlogPosting"
+>
+  <head>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <title>{{ page.title }}</title>
+  </head>
+  <header class="post-header">
+    <div class="post-back">
+      <a class="black-link" href="{{ site.url | relative_url }}">
+        ← {{ site.moving.back_to }}
+      </a>
+    </div>
+
+    <h1 class="post-title p-name" itemprop="name headline">
+      {{ page.title | escape }}
+    </h1>
+    <p class="post-meta">
+      <time
+        class="dt-published"
+        datetime="{{ page.date | date_to_xmlschema }}"
+        itemprop="datePublished"
+      >
+        {%- assign date_format = "%b %-d, %Y" -%}
+        {{ page.date | date: date_format }}
+      </time>
+      {%- if page.author -%} •
+      <span itemprop="author" itemscope itemtype="http://schema.org/Person"
+        ><span class="p-author h-card" itemprop="name">{{
+          page.author | escape
+        }}</span></span
+      >
+      {%- endif -%}
+    </p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    {{ content }}
+  </div>
+
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
+
+<div class="ant-alert mb-0">
+  <ul>
+    <li>
+      {%- assign date_format_line = "%Y-%m-%d" -%}
+      Posted at {{ page.date | date: date_format_line }}{%- if page.last_modified_at -%}，Updated at {{ page.last_modified_at | date:
+      date_format_line }}{%- endif %}
+    </li>
+  </ul>
+
+</div>
+
+<div class="page-navigation">
+  {% if page.previous.url %}
+  <a class="prev" href="{{page.previous.url}}">&laquo; Prev</a>
+  {% endif %} {% if page.next.url %}
+  <a class="next" href="{{page.next.url}}">Next &raquo;</a>
+  {% endif %}
+</div>
+
+{%- include giscus.html -%}

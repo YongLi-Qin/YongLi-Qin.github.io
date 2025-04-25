@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" /><!-- Begin Jekyll SEO tag v2.7.1 -->
+<meta name="generator" content="Jekyll v4.0.1" />
+<meta property="og:title" content="🗂 【Daily】Question with answer - 2023" />
+<meta name="author" content="QYF" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Summary This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year." />
+<meta property="og:description" content="Summary This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year." />
+<link rel="canonical" href="http://localhost:4000/2023/03/04/Quick-Answer.html" />
+<meta property="og:url" content="http://localhost:4000/2023/03/04/Quick-Answer.html" />
+<meta property="og:site_name" content="Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-03-04T00:00:00+11:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🗂 【Daily】Question with answer - 2023" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/2023/03/04/Quick-Answer.html","headline":"🗂 【Daily】Question with answer - 2023","datePublished":"2023-03-04T00:00:00+11:00","dateModified":"2023-04-02T17:41:56+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2023/03/04/Quick-Answer.html"},"author":{"@type":"Person","name":"QYF"},"description":"Summary This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year.","@type":"BlogPosting","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css" />
+  <link rel="shortcut icon" type="image/x-icon" href="/./favicon.ico?" />
+  <link rel="stylesheet" href="http://localhost:4000/assets/css/agate.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad();
+  </script><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Blog" /></head><body>
+    <main class="page-content" aria-label="Content">
+        <div class="wrapper">
+            <article
+  class="post h-entry"
+  itemscope
+  itemtype="http://schema.org/BlogPosting"
+>
+  <head>
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+    <title>🗂 【Daily】Question with answer - 2023</title>
+  </head>
+  <header class="post-header">
+    <div class="post-back">
+      <a class="black-link" href="http://localhost:4000">
+        ← Index
+      </a>
+    </div>
+
+    <h1 class="post-title p-name" itemprop="name headline">
+      🗂 【Daily】Question with answer - 2023
+    </h1>
+    <p class="post-meta">
+      <time
+        class="dt-published"
+        datetime="2023-03-04T00:00:00+11:00"
+        itemprop="datePublished"
+      >Mar 4, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="summary">Summary</h2>
+<p>This post contains some short answers of the technology questions I met in my daily work in 2023, including some other LINK for further details answers. Will keep updating this post for a year.</p>
+
+<h3 id="what-are-the-popular-ways-to-maintain-a-users-authentication-state-nowadays">What are the popular ways to maintain a user’s authentication state nowadays?</h3>
+
+<p>Http is stateless protocol, which means for every separate request, it must contain information to tell the server who you are. There are mainly two ways to do it, <strong>session token</strong> and <strong>JWTs</strong>.</p>
+
+<p><img src="https://typora-1302119905.cos.ap-nanjing.myqcloud.com/Coding/RequestAuth.png" alt="Request Authentication" /></p>
+
+<hr />
+
+<h3 id="how-does-sessionid-or-session-token-work">How does sessionID or session token work?</h3>
+
+<p>Every time when user sends first request to try to login to a serve, serve side will validate the data of username or password. Once success, server side will generate a sessionID and store it, then return a cookie with the sessionID. Then for the following request to this serve will always include that cookie.</p>
+
+<p>For every request with cookie, Serve could identify which user is sending this request base on the sessionID of the cookie. Some cons for session based authentication is it would increase the storage cost in the serve side as more user login, cause serve need to store the mapping between user and sessionID in it.</p>
+
+<hr />
+
+<h3 id="what-is-jwt">What is JWT?</h3>
+
+<p>JWT(Json Web Token) is a token sent by serve to client when login. It contains 3 sections, which are header, payload and signature (signature of the header and payload). In the payload, it normally contains information like user role, user id, issuer (the serve where the jwt token from). when client use this jwt token to request the serve, serve could know who is sending the request. Compare to sessionID, which need the serve to store the mapping of sessionID and user id, using jwt contains the user id and serve could directly get it.</p>
+
+<hr />
+
+<h3 id="pros--cons-of-sessionid-and-jwt-for-authentication">Pros &amp; Cons of SessionID and JWT for Authentication</h3>
+
+<h4 id="sessionid">SessionID</h4>
+
+<p>Pros:</p>
+<ol>
+  <li>Can logout the user from serve side (Revoking user’s access immediately)</li>
+  <li>Session data is not visitable (like user id, role)</li>
+</ol>
+
+<p>Cons:</p>
+<ol>
+  <li>It will introduce notable latency to the response time from the serve. For every request serve need to verify the sessionID and figure out the associate user id for it, either use cache or accessing db for it</li>
+  <li>While the amount of login user increases, more and more sessionID generated and store to cache or db. It needs more cost to maintain session storage.</li>
+</ol>
+
+<h4 id="jwt">JWT</h4>
+
+<p>Pros:</p>
+<ol>
+  <li>Reduce the latency since serve side could do the authentication and figure out who is sending this request quicker</li>
+  <li>Provider more scalability for increasing users. JWT is only stored in client side. Serve doesn’t need to store the mapping of sessionID and userID</li>
+</ol>
+
+<p>Cons:</p>
+<ol>
+  <li>By using JWT, serve could not make a user logout and revoke role or privileges easily. JWT token will keep in valid status before the expired time pass.</li>
+  <li>Session data is visitable. JWT token is only base-64 url encoded content, could easily decode it and get the information on it.</li>
+</ol>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=U6OcC0yq1CE">JSON Web tokens vs sessions for authentication, should you use JWTs as session tokens?</a></li>
+  <li><a href="https://devops.com/session-tokens-vs-jwts-choosing-your-session-management-solution/">Session Tokens Vs. JWTs: Choosing Your Session Management Solution</a></li>
+  <li><a href="https://stytch.com/blog/jwts-vs-sessions-which-is-right-for-you/">JWTs vs. sessions: which authentication approach is right for you?￼</a></li>
+</ul>
+
+  </div>
+
+  <a class="u-url" href="/2023/03/04/Quick-Answer.html" hidden></a>
+</article>
+
+<div class="ant-alert mb-0">
+  <ul>
+    <li>Posted at 2023-03-04，Updated at 2023-04-02
+    </li>
+  </ul>
+
+</div>
+
+<div class="page-navigation">
+  
+  <a class="prev" href="/2022/09/23/Quick-Answer.html">&laquo; Prev</a>
+   
+  <a class="next" href="/2023/04/02/Golang-Docker-K8S.html">Next &raquo;</a>
+  
+</div><script src="https://giscus.app/client.js" data-repo="HarryQin99/HarryQin99.github.io"
+        data-repo-id="MDEwOlJlcG9zaXRvcnk0MDc4ODgxMzk=" data-category="General" data-category-id="DIC_kwDOGE_hC84CVdSA"
+        data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
+        data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
+        </script>
+        </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+    <div class="wrapper">
+      <div class="footer-col-wrapper">
+        <div class="footer-col">
+          <ul class="contact-list">
+            <li class="p-name"><a class="black-link" href="http://localhost:4000/about.html">
+                  QYF 
+                </a></li><li>
+              <a class="u-email black-link" href="mailto:harryqinyf@outlook.com">harryqinyf@outlook.com</a></li></ul>
+        </div>
+      </div>
+    </div>
+  </footer></body>
+</html>

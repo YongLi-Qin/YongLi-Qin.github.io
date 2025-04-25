@@ -1,0 +1,2 @@
+I"^<p>When I was tackling <a href="https://leetcode.com/problems/group-anagrams/description/">this</a> leetcode question by Golang, I found there are actually way many ways to concatenate string in Golang. That’s why I want to write this post to demonstrate some of them and how I compare them to figure out which one is faster or more efficient.</p>
+:ET

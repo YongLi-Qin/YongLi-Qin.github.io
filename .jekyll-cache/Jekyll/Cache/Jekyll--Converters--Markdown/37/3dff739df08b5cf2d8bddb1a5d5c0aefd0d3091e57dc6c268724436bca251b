@@ -1,0 +1,9 @@
+I"<p><a href="#Hash索引">Hash索引</a>
+<a href="#B+树索引">B+树索引</a>
+<a href="#Hash索引和B+树索引有什么区别？">Hash索引和B+树索引有什么区别？</a>
+<a href="#为什么不使用B树而使用B+树？">为什么不使用B树而使用B+树？</a>
+<a href="#聚集索引(Cluster index)">聚集索引(Cluster index)</a>
+<a href="#非聚集索引(Uncluster index)">非聚集索引(Uncluster index)</a>
+<a href="#联合索引">联合索引</a>
+<a href="#覆盖索引">覆盖索引</a></p>
+:ET

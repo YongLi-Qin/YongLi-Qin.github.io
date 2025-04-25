@@ -1,0 +1,2 @@
+I"<<p>Nowaday, using docker with kubernetes as the deployment tools is more and more popular. This exploration document here will mainly focuse on <strong>how</strong> we use docker and kubernetes to deploy a simple service (fully local, yes even the cluster we going to use in kubernetes is in local as well 🥳)</p>
+:ET
