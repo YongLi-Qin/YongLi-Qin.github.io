@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "About useEffect"
+title: "🎓 [Deep Dive] About useEffect"
 date: 2025-04-25 00:00:00 +1000
 ---
 
@@ -82,12 +82,10 @@ function ExampleComponent() {
 
 ---
 
-## 💥 What happens if you don’t use useEffect? Here is a simple example!
+## 💥 What happens if you don’t use useEffect?
 
 
----
-
-### ❌ Example: fetching data directly inside the component body
+### ❌ Fetching data directly inside the component body
 ```js
 function BadComponent() {
   const [data, setData] = useState(null);
@@ -113,7 +111,36 @@ function BadComponent() {
 
 ---
 
+### ✅ Fetching data with useEffect
 
+```javascript
+function GoodComponent() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('https://api.example.com/data')
+  }, []); 
+
+
+  return (
+      return <div>{JSON.stringify(data)}</div>;
+  );
+}
+```
+
+- In this case, we use 
+```javascript
+useEffect(() => {
+    fetch('https://api.example.com/data')
+  }, []); 
+  ```
+  - Only runs once when the component mounts (first render)
+  - Never re-runs, even if state/props change
+  - So we avoid the Infinite loop of requests like above code
+
+
+
+<!-- 
 ### 🧪 Understanding useEffect Comparison and Triggering
 
 ###  💼 How Dependency Comparison Works?
@@ -171,4 +198,4 @@ useEffect(() => {
 - State updates (useState) trigger re-renders which may trigger effects
 
 ---
-
+ -->

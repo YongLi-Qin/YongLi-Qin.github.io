@@ -1,4 +1,4 @@
-I"�!<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
+I"y&<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
 
 <p>Understand What It Is, Why It Matters, and How It Works</p>
 
@@ -70,11 +70,9 @@
 
 <hr />
 
-<h2 id="-what-happens-if-you-dont-use-useeffect-here-is-a-simple-example">💥 What happens if you don’t use useEffect? Here is a simple example!</h2>
+<h2 id="-what-happens-if-you-dont-use-useeffect">💥 What happens if you don’t use useEffect?</h2>
 
-<hr />
-
-<h3 id="-example-fetching-data-directly-inside-the-component-body">❌ Example: fetching data directly inside the component body</h3>
+<h3 id="-fetching-data-directly-inside-the-component-body">❌ Fetching data directly inside the component body</h3>
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">BadComponent</span><span class="p">()</span> <span class="p">{</span>
   <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
@@ -106,75 +104,93 @@
 
 <hr />
 
-<h3 id="-understanding-useeffect-comparison-and-triggering">🧪 Understanding useEffect Comparison and Triggering</h3>
+<h3 id="-fetching-data-with-useeffect">✅ Fetching data with useEffect</h3>
 
-<h3 id="-how-dependency-comparison-works">💼 How Dependency Comparison Works?</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">GoodComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
 
-<p>React’s <code class="highlighter-rouge">useEffect</code> hook uses <strong>shallow comparison</strong> for its dependency array:</p>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.example.com/data</span><span class="dl">'</span><span class="p">)</span>
+  <span class="p">},</span> <span class="p">[]);</span> 
 
-<hr />
 
-<h3 id="-primitive-values-number-string-boolean">🧐 Primitive Values (number, string, boolean)</h3>
-<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="c1">// Runs when userId changes</span>
-<span class="p">},</span> <span class="p">[</span><span class="nx">userId</span><span class="p">]);</span> <span class="c1">// Compares with `===`</span>
+  <span class="k">return</span> <span class="p">(</span>
+      <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <ul>
-  <li>Uses strict equality (===) comparison</li>
-  <li>Effect runs only when the value actually changes</li>
-</ul>
-
-<hr />
-
-<h3 id="-when-useeffect-triggers">🤔 When useEffect Triggers?</h3>
-
-<ul>
-  <li>First Render (Mount)</li>
-  <li>Always runs after initial render</li>
-</ul>
-
-<hr />
-
-<h4 id="-subsequent-renders">💡 Subsequent Renders</h4>
-
-<ul>
-  <li>Runs after render completes</li>
-</ul>
-
-<p>-Only if shallow comparison detects changes in dependencies</p>
-
-<hr />
-
-<h4 id="️-the-render-cycle">⭕️ The Render Cycle</h4>
-
-<ul>
-  <li>
-    <p>Component renders (due to state/props change)</p>
-  </li>
-  <li>
-    <p>React compares each dependency with previous values</p>
-  </li>
-  <li>
-    <p>Effect executes if any dependency changed</p>
+  <li>In this case, we use
+    <div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.example.com/data</span><span class="dl">'</span><span class="p">)</span>
+<span class="p">},</span> <span class="p">[]);</span> 
+</code></pre></div>    </div>
+    <ul>
+      <li>Only runs once when the component mounts (first render)</li>
+      <li>Never re-runs, even if state/props change</li>
+      <li>So we avoid the Infinite loop of requests like above code</li>
+    </ul>
   </li>
 </ul>
 
-<hr />
+<!-- 
+### 🧪 Understanding useEffect Comparison and Triggering
 
-<h4 id="-key-points">🔑 Key Points</h4>
-<ul>
-  <li>
-    <p>useEffect runs asynchronously after render completes</p>
-  </li>
-  <li>
-    <p>Parent re-renders will cause child effects to re-evaluate</p>
-  </li>
-  <li>
-    <p>State updates (useState) trigger re-renders which may trigger effects</p>
-  </li>
-</ul>
+###  💼 How Dependency Comparison Works?
 
-<hr />
+React's `useEffect` hook uses **shallow comparison** for its dependency array:
 
+
+---
+
+### 🧐 Primitive Values (number, string, boolean)
+```javascript
+useEffect(() => {
+  // Runs when userId changes
+}, [userId]); // Compares with `===`
+```
+
+- Uses strict equality (===) comparison
+- Effect runs only when the value actually changes
+
+
+---
+
+### 🤔 When useEffect Triggers?
+
+- First Render (Mount)
+- Always runs after initial render
+
+
+---
+
+#### 💡 Subsequent Renders
+
+- Runs after render completes
+
+-Only if shallow comparison detects changes in dependencies
+
+---
+
+
+#### ⭕️ The Render Cycle
+
+- Component renders (due to state/props change)
+
+- React compares each dependency with previous values
+
+- Effect executes if any dependency changed
+
+---
+
+#### 🔑 Key Points
+- useEffect runs asynchronously after render completes
+
+- Parent re-renders will cause child effects to re-evaluate
+
+- State updates (useState) trigger re-renders which may trigger effects
+
+---
+ -->
 :ET
