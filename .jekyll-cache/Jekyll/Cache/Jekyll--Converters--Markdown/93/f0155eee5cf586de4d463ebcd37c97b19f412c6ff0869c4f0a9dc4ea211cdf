@@ -1,65 +1,4 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" /><!-- Begin Jekyll SEO tag v2.7.1 -->
-<meta name="generator" content="Jekyll v4.0.1" />
-<meta property="og:title" content="🎓 [Deep Dive] About useEffect" />
-<meta name="author" content="Matt Qin" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="📝 Why Do We Need useEffect in React?" />
-<meta property="og:description" content="📝 Why Do We Need useEffect in React?" />
-<link rel="canonical" href="http://localhost:4000/2025/04/25/userEffect.html" />
-<meta property="og:url" content="http://localhost:4000/2025/04/25/userEffect.html" />
-<meta property="og:site_name" content="Blog" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-25T00:00:00+10:00" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="🎓 [Deep Dive] About useEffect" />
-<script type="application/ld+json">
-{"url":"http://localhost:4000/2025/04/25/userEffect.html","headline":"🎓 [Deep Dive] About useEffect","dateModified":"2025-04-25T16:00:36+10:00","datePublished":"2025-04-25T00:00:00+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/04/25/userEffect.html"},"author":{"@type":"Person","name":"Matt Qin"},"description":"📝 Why Do We Need useEffect in React?","@type":"BlogPosting","@context":"https://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="/./favicon.ico?" />
-  <link rel="stylesheet" href="http://localhost:4000/assets/css/agate.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
-  <script>
-    hljs.initHighlightingOnLoad();
-  </script><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Blog" /></head><body>
-    <main class="page-content" aria-label="Content">
-        <div class="wrapper">
-            <article
-  class="post h-entry"
-  itemscope
-  itemtype="http://schema.org/BlogPosting"
->
-  <head>
-    <script type="text/javascript" async
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <title>🎓 [Deep Dive] About useEffect</title>
-  </head>
-  <header class="post-header">
-    <div class="post-back">
-      <a class="black-link" href="http://localhost:4000">
-        ← Index
-      </a>
-    </div>
-
-    <h1 class="post-title p-name" itemprop="name headline">
-      🎓 [Deep Dive] About useEffect
-    </h1>
-    <p class="post-meta">
-      <time
-        class="dt-published"
-        datetime="2025-04-25T00:00:00+10:00"
-        itemprop="datePublished"
-      >Apr 25, 2025
-      </time></p>
-  </header>
-
-  <div class="post-content e-content" itemprop="articleBody">
-    <h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
+I"x5<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
 
 <p>Understand What It Is, Why It Matters, and How It Works</p>
 
@@ -224,14 +163,12 @@
 
 </code></pre></div></div>
 
-<hr />
-
 <h4 id="2-can-you-have-multiple-useeffect-hooks-in-the-same-component">2. Can you have multiple useEffect hooks in the same component?</h4>
 
 <p>✅ Yes, absolutely!</p>
 
-<p>You can (and often should) use multiple <code class="highlighter-rouge">useEffect</code> hooks within a single component.
-Each <code class="highlighter-rouge">useEffect</code> should ideally manage one specific side effect.</p>
+<p>You can (and often should) use multiple useEffect hooks within a single component.
+Each useEffect should ideally manage one specific side effect.</p>
 
 <p>This makes your code cleaner, easier to read, and easier to maintain.</p>
 
@@ -246,42 +183,6 @@ Each <code class="highlighter-rouge">useEffect</code> should ideally manage one 
 <span class="p">},</span> <span class="p">[</span><span class="nx">name</span><span class="p">]);</span>
 
 </code></pre></div></div>
-
-<p>Each effect operates independently, depending on its specific dependencies.</p>
-
-<hr />
-
-<h4 id="3-if-there-are-multiple-useeffect-what-is-their-execution-order">3. If there are multiple useEffect, what is their execution order?</h4>
-<p>React runs multiple <code class="highlighter-rouge">useEffect</code> hooks in the order they appear in your code — top to bottom.</p>
-
-<p>Even if different effects depend on different variables, the order is determined by their position in the component.</p>
-
-<p>Example:</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">First Effect</span><span class="dl">'</span><span class="p">);</span>
-<span class="p">},</span> <span class="p">[]);</span>
-
-<span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Second Effect</span><span class="dl">'</span><span class="p">);</span>
-<span class="p">},</span> <span class="p">[]);</span>
-
-<span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Third Effect</span><span class="dl">'</span><span class="p">);</span>
-<span class="p">},</span> <span class="p">[]);</span>
-
-</code></pre></div></div>
-
-<p>Output after first render:</p>
-
-<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">First</span> <span class="nx">Effect</span>
-<span class="nx">Second</span> <span class="nx">Effect</span>
-<span class="nx">Third</span> <span class="nx">Effect</span>
-
-
-</code></pre></div></div>
-
-<p>Cleanup functions, if any, are called in reverse order before running the new effects.</p>
 
 <!-- 
 ### 🧪 Understanding useEffect Comparison and Triggering
@@ -342,44 +243,4 @@ useEffect(() => {
 
 ---
  -->
-
-  </div>
-
-  <a class="u-url" href="/2025/04/25/userEffect.html" hidden></a>
-</article>
-
-<div class="ant-alert mb-0">
-  <ul>
-    <li>Posted at 2025-04-25，Updated at 2025-04-25
-    </li>
-  </ul>
-
-</div>
-
-<div class="page-navigation">
-  
-  <a class="prev" href="/2021/09/15/welcome-to-jekyll.html">&laquo; Prev</a>
-   
-  <a class="next" href="/2025/04/28/userEffectExample.html">Next &raquo;</a>
-  
-</div><script src="https://giscus.app/client.js" data-repo="HarryQin99/HarryQin99.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnk0MDc4ODgxMzk=" data-category="General" data-category-id="DIC_kwDOGE_hC84CVdSA"
-        data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
-        data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
-        </script>
-        </div>
-    </main><footer class="site-footer h-card">
-    <data class="u-url" href="/"></data>
-    <div class="wrapper">
-      <div class="footer-col-wrapper">
-        <div class="footer-col">
-          <ul class="contact-list">
-            <li class="p-name"><a class="black-link" href="http://localhost:4000/about.html">
-                  Matt Qin 
-                </a></li><li>
-              <a class="u-email black-link" href="mailto:yongliqin0321@outlook.com">yongliqin0321@outlook.com</a></li></ul>
-        </div>
-      </div>
-    </div>
-  </footer></body>
-</html>
+:ET

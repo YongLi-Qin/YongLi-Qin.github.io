@@ -1,7 +1,6 @@
-I"'<h1 id="-why-this-matters">🎯 Why This Matters</h1>
+I"�(<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
 
-<p>In the previous post, we introduced the basic concepts behind <code class="highlighter-rouge">useEffect</code>.
-Now, let’s dive into practical examples to understand why we need it — and what issues can arise if we ignore it.</p>
+<p>Understand What It Is, Why It Matters, and How It Works</p>
 
 <hr />
 
@@ -133,6 +132,14 @@ Now, let’s dive into practical examples to understand why we need it — and w
       <li>So we avoid the Infinite loop of requests like above code</li>
     </ul>
   </li>
+</ul>
+
+<h2 id="-qa-common-questions-about-useeffect">❓ Q&amp;A: Common Questions About useEffect</h2>
+
+<h4 id="1-what-is-the-purpose-of-the-cleanup-function-in-useeffect">1. What is the purpose of the cleanup function in useEffect?</h4>
+<ul>
+  <li>In useEffect, you can return a function — called the cleanup function — that React will call when the component unmounts or before re-running the effect due to dependency changes.</li>
+  <li>The purpose of cleanup is to remove or cancel any ongoing side effects that should no longer be active, such as:</li>
 </ul>
 
 <!-- 

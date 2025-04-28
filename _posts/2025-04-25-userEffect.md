@@ -139,6 +139,110 @@ useEffect(() => {
   - So we avoid the Infinite loop of requests like above code
 
 
+## ❓ Q&A: Common Questions About useEffect
+
+
+#### 1. What is the purpose of the cleanup function in useEffect?
+In useEffect, you can return a function — called the cleanup function — that React will call when the component unmounts or before re-running the effect due to dependency changes.
+
+
+The purpose of cleanup is to remove or cancel any ongoing side effects that should no longer be active, such as:
+- Removing event listeners
+- Clearing timers (`setInterval` or `setTimeout`)
+- Unsubscribing from subscriptions
+- Closing WebSocket connections
+
+
+Without proper cleanup, you risk memory leaks, unexpected behaviors, and performance issues.
+
+```js
+useEffect(() => {
+  function handleResize() {
+    console.log('Window resized:', window.innerWidth);
+  }
+
+  window.addEventListener('resize', handleResize);
+
+  return () => {
+    window.removeEventListener('resize', handleResize);
+  };
+}, []);
+
+```
+
+
+---
+
+
+#### 2. Can you have multiple useEffect hooks in the same component?
+
+✅ Yes, absolutely!
+
+
+You can (and often should) use multiple `useEffect` hooks within a single component.
+Each `useEffect` should ideally manage one specific side effect.
+
+
+This makes your code cleaner, easier to read, and easier to maintain.
+
+Example:
+
+```js
+useEffect(() => {
+  console.log('Effect for count');
+}, [count]);
+
+useEffect(() => {
+  console.log('Effect for name');
+}, [name]);
+
+```
+
+Each effect operates independently, depending on its specific dependencies.
+
+
+---
+
+
+#### 3. If there are multiple useEffect, what is their execution order?
+React runs multiple `useEffect` hooks in the order they appear in your code — top to bottom.
+
+Even if different effects depend on different variables, the order is determined by their position in the component.
+
+
+Example:
+
+```js
+useEffect(() => {
+  console.log('First Effect');
+}, []);
+
+useEffect(() => {
+  console.log('Second Effect');
+}, []);
+
+useEffect(() => {
+  console.log('Third Effect');
+}, []);
+
+```
+
+
+Output after first render:
+
+```js
+First Effect
+Second Effect
+Third Effect
+
+
+```
+
+Cleanup functions, if any, are called in reverse order before running the new effects.
+
+
+
+
 
 <!-- 
 ### 🧪 Understanding useEffect Comparison and Triggering

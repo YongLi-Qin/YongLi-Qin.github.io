@@ -1,4 +1,4 @@
-I"y&<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
+I"u1<h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
 
 <p>Understand What It Is, Why It Matters, and How It Works</p>
 
@@ -133,6 +133,44 @@
     </ul>
   </li>
 </ul>
+
+<h2 id="-qa-common-questions-about-useeffect">❓ Q&amp;A: Common Questions About useEffect</h2>
+
+<h4 id="1-what-is-the-purpose-of-the-cleanup-function-in-useeffect">1. What is the purpose of the cleanup function in useEffect?</h4>
+<p>In useEffect, you can return a function — called the cleanup function — that React will call when the component unmounts or before re-running the effect due to dependency changes.</p>
+
+<p>The purpose of cleanup is to remove or cancel any ongoing side effects that should no longer be active, such as:</p>
+<ul>
+  <li>Removing event listeners</li>
+  <li>Clearing timers (<code class="highlighter-rouge">setInterval</code> or <code class="highlighter-rouge">setTimeout</code>)</li>
+  <li>Unsubscribing from subscriptions</li>
+  <li>Closing WebSocket connections</li>
+</ul>
+
+<p>Without proper cleanup, you risk memory leaks, unexpected behaviors, and performance issues.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">handleResize</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Window resized:</span><span class="dl">'</span><span class="p">,</span> <span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">resize</span><span class="dl">'</span><span class="p">,</span> <span class="nx">handleResize</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nb">window</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">resize</span><span class="dl">'</span><span class="p">,</span> <span class="nx">handleResize</span><span class="p">);</span>
+  <span class="p">};</span>
+<span class="p">},</span> <span class="p">[]);</span>
+
+</code></pre></div></div>
+
+<h4 id="2-can-you-have-multiple-useeffect-hooks-in-the-same-component">2. Can you have multiple useEffect hooks in the same component?</h4>
+
+<p>✅ Yes, absolutely!</p>
+
+<p>You can (and often should) use multiple useEffect hooks within a single component.
+Each useEffect should ideally manage one specific side effect.</p>
+
+<p>This makes your code cleaner, easier to read, and easier to maintain.</p>
 
 <!-- 
 ### 🧪 Understanding useEffect Comparison and Triggering
