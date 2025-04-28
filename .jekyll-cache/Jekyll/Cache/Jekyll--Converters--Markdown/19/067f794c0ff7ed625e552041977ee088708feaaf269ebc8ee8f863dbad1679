@@ -1,0 +1,214 @@
+I"?1<h1 id="-why-this-matters">🎯 Why This Matters</h1>
+
+<p>In the previous post, we introduced the basic concepts behind <code class="highlighter-rouge">useEffect</code>.
+Now, let’s dive into practical examples to understand why we need it — and what issues can arise if we ignore it.</p>
+
+<hr />
+
+<h2 id="-use-case-1-fetching-api-data">📌 Use Case 1: Fetching API Data</h2>
+
+<h3 id="-without-useeffect-wrong">❌ Without useEffect (Wrong)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">BadComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.example.com/data</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">setData</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Every render triggers a fetch</p>
+  </li>
+  <li>
+    <p>setData() causes re-render → infinite loop</p>
+  </li>
+  <li>
+    <p>❗️ App becomes slow, unstable, or crashes</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-with-useeffect-correct">✅ With useEffect (Correct)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">GoodComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.example.com/data</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">setData</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>fetch runs only once on mount</li>
+  <li>No repeated API calls</li>
+</ul>
+
+<hr />
+
+<h2 id="-use-case-2-setting-up-event-listeners">📌 Use Case 2: Setting up Event Listeners</h2>
+
+<h3 id="-without-useeffect-wrong-1">❌ Without useEffect (Wrong)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">BadResizeComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">resize</span><span class="dl">'</span><span class="p">,</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">);</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Resize</span> <span class="nx">the</span> <span class="nb">window</span><span class="o">!&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>A new event listener is added on every render</li>
+  <li>Leads to memory leak and performance drop</li>
+</ul>
+
+<hr />
+
+<h3 id="-with-useeffect-correct-1">✅ With useEffect (Correct)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">GoodResizeComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">handleResize</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">);</span>
+    <span class="p">};</span>
+
+    <span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">resize</span><span class="dl">'</span><span class="p">,</span> <span class="nx">handleResize</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">removeEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">resize</span><span class="dl">'</span><span class="p">,</span> <span class="nx">handleResize</span><span class="p">);</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Resize</span> <span class="nx">the</span> <span class="nb">window</span><span class="o">!&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Listener added once</li>
+  <li>Listener cleaned up properly when component unmounts</li>
+</ul>
+
+<hr />
+
+<h2 id="-use-case-3-timers-setinterval--settimeout">📌 Use Case 3: Timers (setInterval / setTimeout)</h2>
+
+<h3 id="-without-useeffect-wrong-2">❌ Without useEffect (Wrong)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">BadTimerComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tick</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Timer</span> <span class="nx">running</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Every render creates a new interval</li>
+  <li>Leads to multiple timers ticking at once</li>
+</ul>
+
+<hr />
+
+<h3 id="-with-useeffect-correct-2">✅ With useEffect (Correct)</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">GoodTimerComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Tick</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span> <span class="c1">// cleanup</span>
+  <span class="p">},</span> <span class="p">[]);</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="nx">Timer</span> <span class="nx">running</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Only one interval</li>
+  <li>Cleared on unmount</li>
+</ul>
+
+<h3 id="-understanding-useeffect-comparison-and-triggering">🧪 Understanding useEffect Comparison and Triggering</h3>
+
+<h3 id="-how-dependency-comparison-works">💼 How Dependency Comparison Works?</h3>
+
+<p>React’s <code class="highlighter-rouge">useEffect</code> hook uses <strong>shallow comparison</strong> for its dependency array:</p>
+
+<hr />
+
+<h3 id="-primitive-values-number-string-boolean">🧐 Primitive Values (number, string, boolean)</h3>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// Runs when userId changes</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">userId</span><span class="p">]);</span> <span class="c1">// Compares with `===`</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Uses strict equality (===) comparison</li>
+  <li>Effect runs only when the value actually changes</li>
+</ul>
+
+<hr />
+
+<h3 id="-when-useeffect-triggers">🤔 When useEffect Triggers?</h3>
+
+<ul>
+  <li>First Render (Mount)</li>
+  <li>Always runs after initial render</li>
+</ul>
+
+<hr />
+
+<h4 id="-subsequent-renders">💡 Subsequent Renders</h4>
+
+<ul>
+  <li>Runs after render completes</li>
+</ul>
+
+<p>-Only if shallow comparison detects changes in dependencies</p>
+
+<hr />
+
+<h4 id="️-the-render-cycle">⭕️ The Render Cycle</h4>
+
+<ul>
+  <li>
+    <p>Component renders (due to state/props change)</p>
+  </li>
+  <li>
+    <p>React compares each dependency with previous values</p>
+  </li>
+  <li>
+    <p>Effect executes if any dependency changed</p>
+  </li>
+</ul>
+
+<hr />
+
+<h4 id="-key-points">🔑 Key Points</h4>
+<ul>
+  <li>
+    <p>useEffect runs asynchronously after render completes</p>
+  </li>
+  <li>
+    <p>Parent re-renders will cause child effects to re-evaluate</p>
+  </li>
+  <li>
+    <p>State updates (useState) trigger re-renders which may trigger effects</p>
+  </li>
+</ul>
+
+<hr />
+
+:ET

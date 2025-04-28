@@ -1,75 +1,36 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" /><!-- Begin Jekyll SEO tag v2.7.1 -->
-<meta name="generator" content="Jekyll v4.0.1" />
-<meta property="og:title" content="🎓 [Deep Dive] About useEffect" />
-<meta name="author" content="Matt Qin" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="📝 Why Do We Need useEffect in React?" />
-<meta property="og:description" content="📝 Why Do We Need useEffect in React?" />
-<link rel="canonical" href="http://localhost:4000/2025/04/25/userEffect.html" />
-<meta property="og:url" content="http://localhost:4000/2025/04/25/userEffect.html" />
-<meta property="og:site_name" content="Blog" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2025-04-25T00:00:00+10:00" />
-<meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="🎓 [Deep Dive] About useEffect" />
-<script type="application/ld+json">
-{"url":"http://localhost:4000/2025/04/25/userEffect.html","headline":"🎓 [Deep Dive] About useEffect","dateModified":"2025-04-25T16:00:36+10:00","datePublished":"2025-04-25T00:00:00+10:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2025/04/25/userEffect.html"},"author":{"@type":"Person","name":"Matt Qin"},"description":"📝 Why Do We Need useEffect in React?","@type":"BlogPosting","@context":"https://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css" />
-  <link rel="shortcut icon" type="image/x-icon" href="/./favicon.ico?" />
-  <link rel="stylesheet" href="http://localhost:4000/assets/css/agate.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"></script>
-  <script>
-    hljs.initHighlightingOnLoad();
-  </script><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Blog" /></head><body>
-    <main class="page-content" aria-label="Content">
-        <div class="wrapper">
-            <article
-  class="post h-entry"
-  itemscope
-  itemtype="http://schema.org/BlogPosting"
->
-  <head>
-    <script type="text/javascript" async
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
-    </script>
-    <title>🎓 [Deep Dive] About useEffect</title>
-  </head>
-  <header class="post-header">
-    <div class="post-back">
-      <a class="black-link" href="http://localhost:4000">
-        ← Index
-      </a>
-    </div>
+I"Z-<h1 id="-why-this-matters">🎯 Why This Matters</h1>
 
-    <h1 class="post-title p-name" itemprop="name headline">
-      🎓 [Deep Dive] About useEffect
-    </h1>
-    <p class="post-meta">
-      <time
-        class="dt-published"
-        datetime="2025-04-25T00:00:00+10:00"
-        itemprop="datePublished"
-      >Apr 25, 2025
-      </time></p>
-  </header>
-
-  <div class="post-content e-content" itemprop="articleBody">
-    <h1 id="-why-do-we-need-useeffect-in-react">📝 Why Do We Need useEffect in React?</h1>
-
-<p>Understand What It Is, Why It Matters, and How It Works</p>
+<p>In the previous post, we introduced the basic concepts behind <code class="highlighter-rouge">useEffect</code>.
+Now, let’s dive into practical examples to understand why we need it — and what issues can arise if we ignore it.</p>
 
 <hr />
 
-<h2 id="-introduction">✅ Introduction</h2>
+<h1 id="-use-case-1-fetching-api-data">📌 Use Case 1: Fetching API Data</h1>
 
-<p>React’s function components are clean and powerful, but they come with a twist — no lifecycle methods like <code class="highlighter-rouge">componentDidMount</code>. So how do we fetch data, set up timers, or listen to events?</p>
+<h2 id="-without-useeffect-wrong">❌ Without useEffect (Wrong)</h2>
 
-<p>That’s where <code class="highlighter-rouge">useEffect</code> comes in.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">BadComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">https://api.example.com/data</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="o">=&gt;</span> <span class="nx">setData</span><span class="p">(</span><span class="nx">data</span><span class="p">));</span>
+
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">)}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <p>Every render triggers a fetch</p>
+  </li>
+  <li>
+    <p>setData() causes re-render → infinite loop</p>
+  </li>
+  <li>
+    <p>❗️ App becomes slow, unstable, or crashes</p>
+  </li>
+</ul>
 
 <hr />
 
@@ -254,44 +215,4 @@ useEffect(() => {
 
 ---
  -->
-
-  </div>
-
-  <a class="u-url" href="/2025/04/25/userEffect.html" hidden></a>
-</article>
-
-<div class="ant-alert mb-0">
-  <ul>
-    <li>Posted at 2025-04-25，Updated at 2025-04-25
-    </li>
-  </ul>
-
-</div>
-
-<div class="page-navigation">
-  
-  <a class="prev" href="/2021/09/15/welcome-to-jekyll.html">&laquo; Prev</a>
-   
-  <a class="next" href="/2025/04/28/userEffectExample.html">Next &raquo;</a>
-  
-</div><script src="https://giscus.app/client.js" data-repo="HarryQin99/HarryQin99.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnk0MDc4ODgxMzk=" data-category="General" data-category-id="DIC_kwDOGE_hC84CVdSA"
-        data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0"
-        data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="en" crossorigin="anonymous" async>
-        </script>
-        </div>
-    </main><footer class="site-footer h-card">
-    <data class="u-url" href="/"></data>
-    <div class="wrapper">
-      <div class="footer-col-wrapper">
-        <div class="footer-col">
-          <ul class="contact-list">
-            <li class="p-name"><a class="black-link" href="http://localhost:4000/about.html">
-                  Matt Qin 
-                </a></li><li>
-              <a class="u-email black-link" href="mailto:yongliqin0321@outlook.com">yongliqin0321@outlook.com</a></li></ul>
-        </div>
-      </div>
-    </div>
-  </footer></body>
-</html>
+:ET
