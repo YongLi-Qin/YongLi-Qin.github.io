@@ -1,4 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-04-28T14:47:28+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>Matt Qin</name></author><entry><title type="html">🎓 [Deep Dive] Practical useEffect Use Cases</title><link href="http://localhost:4000/2025/04/28/userEffectExample.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] Practical useEffect Use Cases" /><published>2025-04-28T00:00:00+10:00</published><updated>2025-04-28T14:24:56+10:00</updated><id>http://localhost:4000/2025/04/28/userEffectExample</id><content type="html" xml:base="http://localhost:4000/2025/04/28/userEffectExample.html">&lt;h1 id=&quot;-why-this-matters&quot;&gt;🎯 Why This Matters&lt;/h1&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-01T16:24:16+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>Matt Qin</name></author><entry><title type="html">🎓 [Deep Dive] About Redux</title><link href="http://localhost:4000/2025/05/01/redux.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About Redux" /><published>2025-05-01T12:00:00+10:00</published><updated>2025-05-01T16:24:16+10:00</updated><id>http://localhost:4000/2025/05/01/redux</id><content type="html" xml:base="http://localhost:4000/2025/05/01/redux.html">&lt;h1 id=&quot;-about-redux&quot;&gt;📝 About Redux&lt;/h1&gt;
+
+&lt;p&gt;Understand What It Is, Why It Matters, and How It Works&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-introduction&quot;&gt;✅ Introduction&lt;/h2&gt;
+
+&lt;p&gt;Redux provides a &lt;strong&gt;centralized store&lt;/strong&gt; to hold all &lt;strong&gt;application state&lt;/strong&gt;.&lt;br /&gt;
+Instead of each component managing its own &lt;strong&gt;local state&lt;/strong&gt; and passing data via &lt;strong&gt;props&lt;/strong&gt;,&lt;br /&gt;
+Redux allows components to &lt;strong&gt;read&lt;/strong&gt; and &lt;strong&gt;update shared global state&lt;/strong&gt; in a &lt;strong&gt;consistent and scalable way&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;👉 For example, the &lt;strong&gt;shopping cart&lt;/strong&gt; in an e-commerce website is typically managed with Redux, since it needs to be &lt;strong&gt;accessible and modifiable&lt;/strong&gt; from multiple pages like the &lt;em&gt;product list&lt;/em&gt;, &lt;em&gt;cart page&lt;/em&gt;, and &lt;em&gt;checkout&lt;/em&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-core-concepts&quot;&gt;🔁 Core Concepts&lt;/h2&gt;
+
+&lt;p&gt;Redux has three main building blocks:&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;strong&gt;Concept&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;Description&lt;/strong&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Store&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;Holds the application’s state (like a central database in memory)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Action&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;A plain JavaScript object that describes what happened&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Reducer&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;A pure function that determines how state changes in response to an action&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-why-use-redux&quot;&gt;✅ Why Use Redux?&lt;/h2&gt;
+
+&lt;p&gt;Redux offers a number of benefits, especially for medium to large-scale applications:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Centralized state management&lt;/strong&gt; — all application state is stored in a single place, making it easier to access and manage.&lt;/li&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Avoid deeply nested props passing&lt;/strong&gt; (a.k.a. &lt;em&gt;“prop drilling”&lt;/em&gt;) — no need to pass data through multiple layers of components.&lt;/li&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Share state across distant components&lt;/strong&gt; — such as sharing cart data between the navbar and the checkout page.&lt;/li&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Debuggable via Redux DevTools&lt;/strong&gt; — track every state change over time and replay actions for debugging.&lt;/li&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Separate state logic from UI logic&lt;/strong&gt; — improves code clarity and reusability.&lt;/li&gt;
+  &lt;li&gt;✅ &lt;strong&gt;Easy to reason about&lt;/strong&gt; — the strict unidirectional data flow makes the application behavior more understandable.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;️-redux-workflow-in-react&quot;&gt;🛠️ Redux Workflow in React&lt;/h2&gt;
+
+&lt;p&gt;Here’s a typical step-by-step workflow for using Redux in a React application:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Create a Redux store&lt;/strong&gt;&lt;br /&gt;
+Use &lt;code class=&quot;highlighter-rouge&quot;&gt;configureStore()&lt;/code&gt; from Redux Toolkit to initialize the global store that will hold your entire app’s state.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Create a slice (module of state)&lt;/strong&gt;&lt;br /&gt;
+Use &lt;code class=&quot;highlighter-rouge&quot;&gt;createSlice()&lt;/code&gt; to define:
+    &lt;ul&gt;
+      &lt;li&gt;the initial state&lt;/li&gt;
+      &lt;li&gt;reducer functions (how state changes)&lt;/li&gt;
+      &lt;li&gt;automatically generated action creators&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Provide the store to your app&lt;/strong&gt;&lt;br /&gt;
+Wrap your React app with &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;Provider store={store}&amp;gt;&lt;/code&gt; so all components can access the Redux store.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Dispatch actions from components&lt;/strong&gt;&lt;br /&gt;
+Use &lt;code class=&quot;highlighter-rouge&quot;&gt;useDispatch()&lt;/code&gt; to trigger an action, like &lt;code class=&quot;highlighter-rouge&quot;&gt;dispatch(addToCart(product))&lt;/code&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Reducers handle actions and update the state&lt;/strong&gt;&lt;br /&gt;
+Redux automatically calls the corresponding reducer function, which returns a new state.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Components read updated state&lt;/strong&gt;&lt;br /&gt;
+Use &lt;code class=&quot;highlighter-rouge&quot;&gt;useSelector()&lt;/code&gt; to read specific slices of state (e.g., &lt;code class=&quot;highlighter-rouge&quot;&gt;state.cart.items&lt;/code&gt;). When state changes, components re-render automatically.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;(Optional) Use middleware for async logic&lt;/strong&gt;&lt;br /&gt;
+Use &lt;code class=&quot;highlighter-rouge&quot;&gt;redux-thunk&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;redux-saga&lt;/code&gt; if you need to handle side effects like API calls.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-for-example-managing-a-shopping-cart&quot;&gt;🛒 For Example: Managing a Shopping Cart&lt;/h2&gt;
+
+&lt;p&gt;In an e-commerce application, the shopping cart is a perfect use case for Redux:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;🧩 Multiple pages (Product List, Cart Page, Checkout Page) all need access to the cart&lt;/li&gt;
+  &lt;li&gt;🔄 You want to update cart state from any page&lt;/li&gt;
+  &lt;li&gt;🚀 You want cart data to persist as users navigate&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Redux lets you:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;🗂️ Store cart items in a centralized state (&lt;code class=&quot;highlighter-rouge&quot;&gt;store.cart.items&lt;/code&gt;)&lt;/li&gt;
+  &lt;li&gt;➕ Add to cart using &lt;code class=&quot;highlighter-rouge&quot;&gt;dispatch(addToCart(product))&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;❌ Remove or clear cart with dedicated actions like &lt;code class=&quot;highlighter-rouge&quot;&gt;dispatch(removeFromCart(id))&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;👀 Access cart data anywhere using &lt;code class=&quot;highlighter-rouge&quot;&gt;useSelector((state) =&amp;gt; state.cart.items)&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;🎯 With Redux, your shopping cart logic becomes &lt;strong&gt;cleaner&lt;/strong&gt;, &lt;strong&gt;centralized&lt;/strong&gt;, and &lt;strong&gt;decoupled&lt;/strong&gt; from individual components — making your application easier to scale and maintain.&lt;/p&gt;
+
+&lt;hr /&gt;</content><author><name>Matt Qin</name></author><summary type="html">📝 About Redux</summary></entry><entry><title type="html">🎓 [Deep Dive] Practical useEffect Use Cases</title><link href="http://localhost:4000/2025/04/28/userEffectExample.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] Practical useEffect Use Cases" /><published>2025-04-28T12:00:00+10:00</published><updated>2025-04-28T14:24:56+10:00</updated><id>http://localhost:4000/2025/04/28/userEffectExample</id><content type="html" xml:base="http://localhost:4000/2025/04/28/userEffectExample.html">&lt;h1 id=&quot;-why-this-matters&quot;&gt;🎯 Why This Matters&lt;/h1&gt;
 
 &lt;p&gt;In the previous post, we introduced the basic concepts behind &lt;code class=&quot;highlighter-rouge&quot;&gt;useEffect&lt;/code&gt;.
 Now, let’s dive into practical examples to understand why we need it — and what issues can arise if we ignore it.&lt;/p&gt;
@@ -209,7 +329,7 @@ Now, let’s dive into practical examples to understand why we need it — and w
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr /&gt;</content><author><name>Matt Qin</name></author><summary type="html">🎯 Why This Matters</summary></entry><entry><title type="html">🎓 [Deep Dive] About useEffect</title><link href="http://localhost:4000/2025/04/25/userEffect.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About useEffect" /><published>2025-04-25T00:00:00+10:00</published><updated>2025-04-25T16:00:36+10:00</updated><id>http://localhost:4000/2025/04/25/userEffect</id><content type="html" xml:base="http://localhost:4000/2025/04/25/userEffect.html">&lt;h1 id=&quot;-why-do-we-need-useeffect-in-react&quot;&gt;📝 Why Do We Need useEffect in React?&lt;/h1&gt;
+&lt;hr /&gt;</content><author><name>Matt Qin</name></author><summary type="html">🎯 Why This Matters</summary></entry><entry><title type="html">🎓 [Deep Dive] About useEffect</title><link href="http://localhost:4000/2025/04/25/userEffect.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About useEffect" /><published>2025-04-25T00:00:00+10:00</published><updated>2025-04-28T14:48:37+10:00</updated><id>http://localhost:4000/2025/04/25/userEffect</id><content type="html" xml:base="http://localhost:4000/2025/04/25/userEffect.html">&lt;h1 id=&quot;-why-do-we-need-useeffect-in-react&quot;&gt;📝 Why Do We Need useEffect in React?&lt;/h1&gt;
 
 &lt;p&gt;Understand What It Is, Why It Matters, and How It Works&lt;/p&gt;
 

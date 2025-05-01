@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "🎓 [Deep Dive] Practical useEffect Use Cases"
-date: 2025-04-28 00:00:00 +1000
+date: 2025-04-28 12:00:00 +1000
 ---
 
 # 🎯 Why This Matters
