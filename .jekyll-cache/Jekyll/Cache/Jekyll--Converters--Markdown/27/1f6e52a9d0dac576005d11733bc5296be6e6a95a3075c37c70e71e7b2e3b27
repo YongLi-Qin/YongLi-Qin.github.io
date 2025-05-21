@@ -1,0 +1,50 @@
+I"	<h1 id="-deep-dive-custom-hook-pattern-design-and-encapsulation-practice">🎓 [Deep Dive] Custom Hook pattern design and encapsulation practice</h1>
+
+<h2 id="-what-is-custom-hook">📘 What is Custom Hook?</h2>
+
+<p>A Custom Hook in React is a reusable function that starts with the prefix use and leverages one or more built-in React Hooks (like useState, useEffect, etc.) to encapsulate and share stateful logic between components, without dealing with any UI rendering.</p>
+
+<hr />
+
+<h2 id="-what-is-asynchronous-logic-in-react">❓ What Is Asynchronous Logic in React?</h2>
+
+<p>Here are the most common sources of async behavior in React applications:</p>
+
+<ul>
+  <li>API requests (e.g., <code class="highlighter-rouge">fetch</code>, <code class="highlighter-rouge">axios</code>)</li>
+  <li>Timers (<code class="highlighter-rouge">setTimeout</code>, <code class="highlighter-rouge">setInterval</code>)</li>
+  <li>Subscriptions (e.g., WebSockets, custom event listeners)</li>
+  <li>Component lifecycle-based loading (e.g., fetch on mount)</li>
+  <li>Post-animation/event callbacks</li>
+</ul>
+
+<hr />
+
+<h2 id="-why-does-it-matter">💡 Why Does It Matter?</h2>
+
+<p>React re-renders components in response to state or props changes. If async logic is not properly handled, it can lead to:</p>
+
+<ul>
+  <li>⚠️ <strong>Memory leaks</strong> – calling <code class="highlighter-rouge">setState</code> after a component unmounts</li>
+  <li>⚠️ <strong>Race conditions</strong> – older requests overriding newer ones</li>
+  <li>⚠️ <strong>UI inconsistencies</strong> – mismatched loading/spinner states</li>
+  <li>⚠️ <strong>Redundant fetches</strong> – unnecessary requests slowing down performance</li>
+  <li>⚠️ <strong>Poor user experience</strong> – freezing UIs or confusing data displays</li>
+</ul>
+
+<hr />
+
+<h2 id="️-how-to-handle-asynchronous-operations-properly">⚙️ How to Handle Asynchronous Operations Properly</h2>
+
+<h3 id="1-use-useeffect-with-async-functions-correctly">1. Use <code class="highlighter-rouge">useEffect</code> with Async Functions (Correctly)</h3>
+
+<p>```js
+useEffect(() =&gt; {
+  const fetchData = async () =&gt; {
+    const res = await fetch(‘/api/data’);
+    const json = await res.json();
+    setData(json);
+  };
+  fetchData();
+}, []);</p>
+:ET

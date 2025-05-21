@@ -1,0 +1,101 @@
+I"#<h2 id="-what-is-custom-hook">📘 What is Custom Hook?</h2>
+
+<p>A Custom Hook in React is a reusable function that starts with the prefix use and leverages one or more built-in React Hooks (like useState, useEffect, etc.) to encapsulate and share stateful logic between components, without dealing with any UI rendering.</p>
+
+<hr />
+
+<h2 id="️-key-characteristics">⚠️ Key characteristics:</h2>
+<ul>
+  <li>Must start with use (e.g., useFetch, useForm, useTimer)</li>
+  <li>Can call other Hooks inside</li>
+  <li>Returns values or functions (not JSX)</li>
+  <li>Encourages logic reuse and separation of concerns</li>
+</ul>
+
+<h2 id="-why-we-need-to-use-custom-hook">❓ Why we need to use Custom Hook?</h2>
+
+<p>Custom Hooks are used to encapsulate reusable logic in React. Instead of copying and pasting the same useEffect, useState, or fetch code across multiple components, you write it once as a function — a Custom Hook — and reuse it everywhere.</p>
+
+<hr />
+
+<h2 id="-benefits-of-custom-hooks">✅ Benefits of Custom Hooks:</h2>
+
+<ul>
+  <li>
+    <p>Avoid code duplication: You don’t have to repeat the same logic in multiple components.</p>
+  </li>
+  <li>
+    <p>Improve readability: Your components focus only on rendering UI, not logic.</p>
+  </li>
+  <li>
+    <p>Encourage separation of concerns: Logic lives in hooks, UI lives in components.</p>
+  </li>
+  <li>
+    <p>Easier to test: You can test the logic of your hook without involving the UI.</p>
+  </li>
+  <li>
+    <p>Composable: You can even combine multiple hooks into one complex behavior.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-example-why-custom-hooks-are-helpful">📘 Example: Why Custom Hooks Are Helpful</h2>
+
+<p>Instead of writing this in every component:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">setLoading</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="nx">fetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/data</span><span class="dl">'</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">setData</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">setError</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">finally</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">));</span>
+<span class="p">},</span> <span class="p">[]);</span>
+</code></pre></div></div>
+
+<p>You can extract it into a reusable hook:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// useFetch.js</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useEffect</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">export</span> <span class="kd">function</span> <span class="nx">useFetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">data</span><span class="p">,</span> <span class="nx">setData</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">loading</span><span class="p">,</span> <span class="nx">setLoading</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">error</span><span class="p">,</span> <span class="nx">setError</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+
+  <span class="nx">useEffect</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">setLoading</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="o">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">setData</span><span class="p">)</span>
+      <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">setError</span><span class="p">)</span>
+      <span class="p">.</span><span class="k">finally</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">setLoading</span><span class="p">(</span><span class="kc">false</span><span class="p">));</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">url</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">loading</span><span class="p">,</span> <span class="nx">error</span> <span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Then in any component:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useFetch</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">../hooks/useFetch</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">MyComponent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">{</span> <span class="nx">data</span><span class="p">,</span> <span class="nx">loading</span><span class="p">,</span> <span class="nx">error</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">useFetch</span><span class="p">(</span><span class="dl">'</span><span class="s1">/api/data</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">loading</span><span class="p">)</span> <span class="k">return</span> <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nx">Loading</span><span class="p">...</span><span class="o">&lt;</span><span class="sr">/p&gt;</span><span class="err">;
+</span>  <span class="k">if</span> <span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="k">return</span> <span class="o">&lt;</span><span class="nx">p</span><span class="o">&gt;</span><span class="nb">Error</span> <span class="nx">occurred</span><span class="o">&lt;</span><span class="sr">/p&gt;</span><span class="err">;
+</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">data</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/div&gt;</span><span class="err">;
+</span><span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="-summary">✅ Summary</h2>
+<p>| Question                                         | Answer                                                                 |
+|————————————————–|————————————————————————|
+| Why use custom hooks?                            | To reuse logic, reduce code duplication, and improve readability       |
+| Are they alternatives to built-in hooks like <code class="highlighter-rouge">useState</code>? | No — they <em>use</em> built-in hooks inside to compose logic                 |
+| How to use them?                                 | Import them like normal functions and call them inside components      |
+| Can they be shared across multiple components?   | Yes — that’s the entire purpose!                                       |</p>
+
+:ET
