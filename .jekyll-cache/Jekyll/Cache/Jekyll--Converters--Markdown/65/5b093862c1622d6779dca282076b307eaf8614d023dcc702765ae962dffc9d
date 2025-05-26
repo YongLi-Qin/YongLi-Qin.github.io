@@ -1,0 +1,112 @@
+I"�<h1 id="-about-usereducer">📝 About useReducer</h1>
+
+<p>Understand What It Is, Why It Matters, and How It Works</p>
+
+<hr />
+
+<h2 id="-introduction">✅ Introduction</h2>
+
+<p><code class="highlighter-rouge">useReducer</code> is a React Hook that is an alternative to <code class="highlighter-rouge">useState</code>, especially useful when:</p>
+
+<ul>
+  <li>State logic is complex or involves multiple sub-values</li>
+  <li>The next state depends on the previous state</li>
+  <li>You want to keep state transitions predictable and testable</li>
+</ul>
+
+<p>It is conceptually similar to how <strong>Redux reducers</strong> work — you dispatch an action, and a reducer function determines the next state based on that action.</p>
+
+<hr />
+
+<h2 id="-core-concepts">🔁 Core Concepts</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>Concept</strong></th>
+      <th><strong>Description</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">state</code></td>
+      <td>The current state of your component</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">dispatch</code></td>
+      <td>A function to send actions to the reducer</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">reducer</code></td>
+      <td>A pure function that returns the new state based on the current state and the dispatched action</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Syntax:</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="nx">state</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useReducer</span><span class="p">(</span><span class="nx">reducerFn</span><span class="p">,</span> <span class="nx">initialState</span><span class="p">);</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-when-to-use-usereducer">✅ When to Use useReducer</h2>
+
+<ul>
+  <li>
+    <p>When your state includes multiple related values</p>
+  </li>
+  <li>
+    <p>When state transitions are complex</p>
+  </li>
+  <li>
+    <p>When you want a clearer structure for managing state</p>
+  </li>
+  <li>
+    <p>When you’re building form state, multi-step wizards, or state machines</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="-usereducer-in-practice">🔍 useReducer in Practice</h2>
+<h3 id="-example-toggle-button-with-usestate">🧪 Example: Toggle Button with useState</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="p">[</span><span class="nx">isOn</span><span class="p">,</span> <span class="nx">setIsOn</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+</code></pre></div></div>
+
+<h3 id="-with-usereducer">🔁 With useReducer</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">toggleReducer</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">switch</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">TOGGLE</span><span class="dl">'</span><span class="p">:</span>
+      <span class="k">return</span> <span class="p">{</span> <span class="na">isOn</span><span class="p">:</span> <span class="o">!</span><span class="nx">state</span><span class="p">.</span><span class="nx">isOn</span> <span class="p">};</span>
+    <span class="nl">default</span><span class="p">:</span>
+      <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">const</span> <span class="p">[</span><span class="nx">state</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useReducer</span><span class="p">(</span><span class="nx">toggleReducer</span><span class="p">,</span> <span class="p">{</span> <span class="na">isOn</span><span class="p">:</span> <span class="kc">false</span> <span class="p">});</span>
+
+<span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">dispatch</span><span class="p">({</span> <span class="na">type</span><span class="p">:</span> <span class="dl">'</span><span class="s1">TOGGLE</span><span class="dl">'</span> <span class="p">})}</span><span class="o">&gt;</span>
+  <span class="p">{</span><span class="nx">state</span><span class="p">.</span><span class="nx">isOn</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">ON</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">OFF</span><span class="dl">'</span><span class="p">}</span>
+<span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span></code></pre></div></div>
+
+<p>This becomes especially useful as the logic gets more complicated (e.g., also tracking number of toggles, timestamps, etc.).</p>
+
+<h2 id="-summary">✅ Summary</h2>
+<ul>
+  <li>
+    <p>useReducer helps manage complex state transitions in React components</p>
+  </li>
+  <li>
+    <p>It brings structure and predictability by centralizing update logic</p>
+  </li>
+  <li>
+    <p>It is ideal when multiple pieces of state need to be updated in coordination</p>
+  </li>
+  <li>
+    <p>A great step toward Redux-style thinking — but within a single component</p>
+  </li>
+</ul>
+
+<p>🎯 Use useReducer when useState starts getting messy, and your component logic will thank you.</p>
+:ET

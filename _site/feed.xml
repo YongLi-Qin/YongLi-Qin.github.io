@@ -1,4 +1,114 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-21T12:20:21+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>Matt Qin</name></author><entry><title type="html">🎓 [Deep Dive] About Custom Hook</title><link href="http://localhost:4000/2025/05/21/CustomHook.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About Custom Hook" /><published>2025-05-21T00:00:00+10:00</published><updated>2025-05-21T12:20:21+10:00</updated><id>http://localhost:4000/2025/05/21/CustomHook</id><content type="html" xml:base="http://localhost:4000/2025/05/21/CustomHook.html">&lt;h2 id=&quot;-what-is-custom-hook&quot;&gt;📘 What is Custom Hook?&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.0.1">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-26T16:30:10+10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Blog</title><subtitle>Just a blog.</subtitle><author><name>Matt Qin</name></author><entry><title type="html">🎓 [Deep Dive] About useReducer</title><link href="http://localhost:4000/2025/05/26/useMemoVSuseCallback.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About useReducer" /><published>2025-05-26T12:00:00+10:00</published><updated>2025-05-26T16:30:09+10:00</updated><id>http://localhost:4000/2025/05/26/useMemoVSuseCallback</id><content type="html" xml:base="http://localhost:4000/2025/05/26/useMemoVSuseCallback.html">&lt;h1 id=&quot;-about-usereducer&quot;&gt;📝 About useReducer&lt;/h1&gt;
+
+&lt;p&gt;Understand What It Is, Why It Matters, and How It Works&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-introduction&quot;&gt;✅ Introduction&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;useReducer&lt;/code&gt; is a React Hook that is an alternative to &lt;code class=&quot;highlighter-rouge&quot;&gt;useState&lt;/code&gt;, especially useful when:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;State logic is complex or involves multiple sub-values&lt;/li&gt;
+  &lt;li&gt;The next state depends on the previous state&lt;/li&gt;
+  &lt;li&gt;You want to keep state transitions predictable and testable&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It is conceptually similar to how &lt;strong&gt;Redux reducers&lt;/strong&gt; work — you dispatch an action, and a reducer function determines the next state based on that action.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-core-concepts&quot;&gt;🔁 Core Concepts&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;&lt;strong&gt;Concept&lt;/strong&gt;&lt;/th&gt;
+      &lt;th&gt;&lt;strong&gt;Description&lt;/strong&gt;&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;state&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;The current state of your component&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dispatch&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;A function to send actions to the reducer&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reducer&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;A pure function that returns the new state based on the current state and the dispatched action&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Syntax:&lt;/p&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dispatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useReducer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reducerFn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;initialState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-when-to-use-usereducer&quot;&gt;✅ When to Use useReducer&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;When your state includes multiple related values&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When state transitions are complex&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When you want a clearer structure for managing state&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;When you’re building form state, multi-step wizards, or state machines&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;-usereducer-in-practice&quot;&gt;🔍 useReducer in Practice&lt;/h2&gt;
+&lt;h3 id=&quot;-example-toggle-button-with-usestate&quot;&gt;🧪 Example: Toggle Button with useState&lt;/h3&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;setIsOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useState&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;-with-usereducer&quot;&gt;🔁 With useReducer&lt;/h3&gt;
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;toggleReducer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;TOGGLE&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;isOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isOn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+    &lt;span class=&quot;nl&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dispatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;useReducer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toggleReducer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;isOn&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;button&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;onClick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;dispatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;TOGGLE&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;state&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isOn&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;ON&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;OFF&lt;/span&gt;&lt;span class=&quot;dl&quot;&gt;'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/button&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This becomes especially useful as the logic gets more complicated (e.g., also tracking number of toggles, timestamps, etc.).&lt;/p&gt;
+
+&lt;h2 id=&quot;-summary&quot;&gt;✅ Summary&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;useReducer helps manage complex state transitions in React components&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It brings structure and predictability by centralizing update logic&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;It is ideal when multiple pieces of state need to be updated in coordination&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;A great step toward Redux-style thinking — but within a single component&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;🎯 Use useReducer when useState starts getting messy, and your component logic will thank you.&lt;/p&gt;</content><author><name>Matt Qin</name></author><summary type="html">📝 About useReducer</summary></entry><entry><title type="html">🎓 [Deep Dive] About Custom Hook</title><link href="http://localhost:4000/2025/05/21/CustomHook.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About Custom Hook" /><published>2025-05-21T00:00:00+10:00</published><updated>2025-05-21T12:20:35+10:00</updated><id>http://localhost:4000/2025/05/21/CustomHook</id><content type="html" xml:base="http://localhost:4000/2025/05/21/CustomHook.html">&lt;h2 id=&quot;-what-is-custom-hook&quot;&gt;📘 What is Custom Hook?&lt;/h2&gt;
 
 &lt;p&gt;A Custom Hook in React is a reusable function that starts with the prefix use and leverages one or more built-in React Hooks (like useState, useEffect, etc.) to encapsulate and share stateful logic between components, without dealing with any UI rendering.&lt;/p&gt;
 
@@ -88,7 +198,7 @@
 &lt;/span&gt;
   &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/div&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;;
 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Matt Qin</name></author><summary type="html">📘 What is Custom Hook?</summary></entry><entry><title type="html">🎓 [Deep Dive] About Redux</title><link href="http://localhost:4000/2025/05/01/redux.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About Redux" /><published>2025-05-01T12:00:00+10:00</published><updated>2025-05-01T16:24:52+10:00</updated><id>http://localhost:4000/2025/05/01/redux</id><content type="html" xml:base="http://localhost:4000/2025/05/01/redux.html">&lt;h1 id=&quot;-about-redux&quot;&gt;📝 About Redux&lt;/h1&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Matt Qin</name></author><summary type="html">📘 What is Custom Hook?</summary></entry><entry><title type="html">🎓 [Deep Dive] About Redux</title><link href="http://localhost:4000/2025/05/01/redux.html" rel="alternate" type="text/html" title="🎓 [Deep Dive] About Redux" /><published>2025-05-01T12:00:00+10:00</published><updated>2025-05-21T12:20:35+10:00</updated><id>http://localhost:4000/2025/05/01/redux</id><content type="html" xml:base="http://localhost:4000/2025/05/01/redux.html">&lt;h1 id=&quot;-about-redux&quot;&gt;📝 About Redux&lt;/h1&gt;
 
 &lt;p&gt;Understand What It Is, Why It Matters, and How It Works&lt;/p&gt;
 
