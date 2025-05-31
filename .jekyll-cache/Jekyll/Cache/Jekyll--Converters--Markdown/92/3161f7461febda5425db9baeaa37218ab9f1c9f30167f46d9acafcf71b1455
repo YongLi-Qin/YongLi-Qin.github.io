@@ -1,0 +1,43 @@
+I"7<h1 id="-what-is-usememo">🧠 What is useMemo?</h1>
+<ul>
+  <li>useMemo is a React Hook that lets you memoize the result of a calculation between renders.</li>
+  <li>Syntax and usage</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">memoizedValue</span> <span class="o">=</span> <span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">computeExpensiveValue</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">]);</span>
+</code></pre></div></div>
+<ul>
+  <li>computeExpensiveValue(a, b) is the function doing heavy work</li>
+  <li>[a, b] is the dependency array — React will only re-run the function when a or b changes</li>
+  <li>The result is cached across renders to avoid recomputation</li>
+</ul>
+
+<h1 id="-what-is-usecallback">🔁 What is useCallback?</h1>
+<ul>
+  <li>
+    <p>useCallback is a React Hook that returns a memoized version of the callback function you pass in. The function will only be recreated if one of the dependencies has changed.</p>
+  </li>
+  <li>Syntax and usage
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">memoizedCallback</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">doSomething</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">])</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">() =&gt; doSomething(a, b)</code> is the function we want to memoize.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">[a, b]</code> is the dependency array. React will return the same function reference across renders unless a or b changes.</p>
+  </li>
+  <li>This helps prevent function reference changes, which can trigger unnecessary re-renders in child components (especially when using React.memo).</li>
+</ul>
+
+<h1 id="-so-whats-the-main-difference">🤔 So what’s the main difference?</h1>
+<p>Let’s keep it simple</p>
+<ul>
+  <li><code class="highlighter-rouge">useMemo</code> -&gt; Memoizes the result of a function</li>
+  <li><code class="highlighter-rouge">useCallback</code> -&gt; Memoizes the function itself</li>
+</ul>
+:ET

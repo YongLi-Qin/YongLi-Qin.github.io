@@ -1,0 +1,5 @@
+I"¦<h1 id="-what-is-usememo">ðŸ§  What is useMemo?</h1>
+<ul>
+  <li>useMemo is a React Hook that lets you memoize the result of a calculation between renders.</li>
+</ul>
+:ET

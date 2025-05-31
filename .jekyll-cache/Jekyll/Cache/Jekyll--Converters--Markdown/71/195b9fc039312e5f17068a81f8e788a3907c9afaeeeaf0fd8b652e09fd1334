@@ -1,0 +1,165 @@
+I"q<<h1 id="-what-is-usememo">🧠 What is useMemo?</h1>
+<ul>
+  <li>useMemo is a React Hook that lets you memoize the result of a calculation between renders.</li>
+  <li>Syntax and usage</li>
+</ul>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">memoizedValue</span> <span class="o">=</span> <span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">computeExpensiveValue</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">]);</span>
+</code></pre></div></div>
+<ul>
+  <li>computeExpensiveValue(a, b) is the function doing heavy work</li>
+  <li>[a, b] is the dependency array — React will only re-run the function when a or b changes</li>
+  <li>The result is cached across renders to avoid recomputation</li>
+</ul>
+
+<hr />
+
+<h1 id="-what-is-usecallback">🔁 What is useCallback?</h1>
+<ul>
+  <li>
+    <p>useCallback is a React Hook that returns a memoized version of the callback function you pass in. The function will only be recreated if one of the dependencies has changed.</p>
+  </li>
+  <li>Syntax and usage
+    <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">const</span> <span class="nx">memoizedCallback</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">doSomething</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span>
+<span class="p">},</span> <span class="p">[</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">])</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">() =&gt; doSomething(a, b)</code> is the function we want to memoize.</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">[a, b]</code> is the dependency array. React will return the same function reference across renders unless a or b changes.</p>
+  </li>
+  <li>This helps prevent function reference changes, which can trigger unnecessary re-renders in child components (especially when using React.memo).</li>
+</ul>
+
+<hr />
+
+<h2 id="-so-whats-the-main-difference">🤔 So what’s the main difference?</h2>
+<p>Let’s keep it simple</p>
+<ul>
+  <li><code class="highlighter-rouge">useMemo</code> -&gt; Memoizes the result of a function</li>
+  <li><code class="highlighter-rouge">useCallback</code> -&gt; Memoizes the function itself</li>
+</ul>
+
+<h2 id="-real-world-example-filtering-a-large-list-with-usememo">✅ Real-world Example: Filtering a Large List with <code class="highlighter-rouge">useMemo</code></h2>
+<p>Let’s say you have a component that displays a list of users, and you want to filter only the admins. Without useMemo, this filtering will happen on every render, even if the <code class="highlighter-rouge">users</code> array hasn’t changed.</p>
+
+<h3 id="-without-usememo">❌ Without useMemo:</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">UserList</span><span class="p">({</span> <span class="nx">users</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">adminUsers</span> <span class="o">=</span> <span class="nx">users</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="nx">user</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">admin</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">adminUsers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Every time this component re-renders, it recalculates adminUsers, even if users is the same.</p>
+
+<h3 id="-with-usememo">✅ With useMemo:</h3>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="p">{</span> <span class="nx">useMemo</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">UserList</span><span class="p">({</span> <span class="nx">users</span> <span class="p">})</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">adminUsers</span> <span class="o">=</span> <span class="nx">useMemo</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">users</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="nx">user</span><span class="p">.</span><span class="nx">role</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">admin</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">},</span> <span class="p">[</span><span class="nx">users</span><span class="p">]);</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">ul</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="nx">adminUsers</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">user</span> <span class="o">=&gt;</span> <span class="p">(</span>
+        <span class="o">&lt;</span><span class="nx">li</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">user</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="o">&lt;</span><span class="sr">/li</span><span class="err">&gt;
+</span>      <span class="p">))}</span>
+    <span class="o">&lt;</span><span class="sr">/ul</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<ul>
+  <li>
+    <p>users.filter(…) could be an expensive operation, especially with a large list.</p>
+  </li>
+  <li>
+    <p>Using useMemo, React will cache the filtered result unless users changes.</p>
+  </li>
+  <li>
+    <p>This reduces unnecessary computation and improves performance.</p>
+  </li>
+</ul>
+
+<hr />
+
+<h3 id="-real-world-example-preventing-unnecessary-child-re-renders-with-usecallback">✅ Real-world Example: Preventing Unnecessary Child Re-renders with <code class="highlighter-rouge">useCallback</code></h3>
+<p>Let’s say you have a Parent component that passes a click handler to a Child component. You want to make sure the Child only re-renders when it actually needs to.</p>
+
+<h3 id="-without-usecallback-function-reference-changes-every-render">❌ Without useCallback (function reference changes every render)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Child</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">memo</span><span class="p">(({</span> <span class="nx">onClick</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Child rendered</span><span class="dl">'</span><span class="p">);</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onClick</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Click</span> <span class="nx">Me</span><span class="o">&lt;</span><span class="sr">/button&gt;</span><span class="err">;
+</span><span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">Parent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">handleClick</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Button clicked</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;&gt;</span>
+      <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span><span class="o">&gt;</span><span class="nx">Increase</span> <span class="nx">Count</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">Child</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleClick</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<h3 id="-problem">❗ Problem:</h3>
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">handleClick</code> is recreated on every render, so:</p>
+  </li>
+  <li>
+    <p>Even though Child is wrapped in React.memo, it still re-renders.</p>
+  </li>
+  <li>
+    <p>Console shows Child rendered every time the parent updates.</p>
+  </li>
+</ul>
+
+<h3 id="-with-usecallback-stable-function-reference">✅ With useCallback (stable function reference)</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span> <span class="nx">useState</span><span class="p">,</span> <span class="nx">useCallback</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">react</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="kd">const</span> <span class="nx">Child</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">memo</span><span class="p">(({</span> <span class="nx">onClick</span> <span class="p">})</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Child rendered</span><span class="dl">'</span><span class="p">);</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">onClick</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Click</span> <span class="nx">Me</span><span class="o">&lt;</span><span class="sr">/button&gt;</span><span class="err">;
+</span><span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">Parent</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="p">[</span><span class="nx">count</span><span class="p">,</span> <span class="nx">setCount</span><span class="p">]</span> <span class="o">=</span> <span class="nx">useState</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="kd">const</span> <span class="nx">handleClick</span> <span class="o">=</span> <span class="nx">useCallback</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Button clicked</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">},</span> <span class="p">[]);</span> <span class="c1">// no dependencies = stable reference</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;&gt;</span>
+      <span class="o">&lt;</span><span class="nx">button</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span> <span class="o">=&gt;</span> <span class="nx">setCount</span><span class="p">(</span><span class="nx">count</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span><span class="o">&gt;</span><span class="nx">Increase</span> <span class="nx">Count</span><span class="o">&lt;</span><span class="sr">/button</span><span class="err">&gt;
+</span>      <span class="o">&lt;</span><span class="nx">Child</span> <span class="nx">onClick</span><span class="o">=</span><span class="p">{</span><span class="nx">handleClick</span><span class="p">}</span> <span class="sr">/</span><span class="err">&gt;
+</span>    <span class="o">&lt;</span><span class="sr">/</span><span class="err">&gt;
+</span>  <span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+:ET
